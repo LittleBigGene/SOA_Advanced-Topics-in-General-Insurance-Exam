@@ -1,6 +1,6 @@
 
 import unittest
-from RiskLoad import Risk_Load as rl
+from Application_Cat_RiskLoad import Risk_Load as rl
 
 class test_RiskLoad(unittest.TestCase):
     def test_spring_19_1(self):

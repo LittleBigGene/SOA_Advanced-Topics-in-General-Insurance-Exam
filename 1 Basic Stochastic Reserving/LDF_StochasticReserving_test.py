@@ -1,5 +1,5 @@
 import unittest
-from StochasticReserving import Stochastic_Reserving as sr
+from LDF_StochasticReserving import Stochastic_Reserving as sr
 
 class test_StochasticReserving(unittest.TestCase):
     def test_spring_19_5(self):

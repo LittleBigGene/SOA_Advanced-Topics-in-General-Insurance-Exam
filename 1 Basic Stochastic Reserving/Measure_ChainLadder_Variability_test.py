@@ -1,5 +1,5 @@
 import unittest
-from ChainLadder import Chain_Ladder as cl
+from Measure_ChainLadder_Variability import Chain_Ladder as cl
 
 class test_ChainLadder(unittest.TestCase):
     def test_spring_19_4(self):
