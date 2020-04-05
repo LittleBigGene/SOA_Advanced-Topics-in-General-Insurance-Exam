@@ -1,20 +1,12 @@
 class Ratemaking_A_FinEcon_Approach:
-    RiskFreeRate = 0
-    Beta = 0
-    MarketRiskPremium =0 
-    Premium=0
-    Equity=0
-    InvestableAsset=0
-    InvestmentReturn=0
-
-    def __init__(self, RiskFreeRate, Beta, MarketRiskPremium, Premium, Equity, InvestableAsset, InvestmentReturn):
-        self.RiskFreeRate = RiskFreeRate
-        self.Beta = Beta
-        self.MarketRiskPremium = MarketRiskPremium
-        self.Premium = Premium
-        self.Equity = Equity
-        self.InvestableAsset = InvestableAsset
-        self.InvestmentReturn = InvestmentReturn
+    def __init__(self):
+        self.RiskFreeRate = 0
+        self.Beta = 0
+        self.MarketRiskPremium = 0
+        self.Premium = 0
+        self.Equity = 0
+        self.InvestableAsset = 0
+        self.InvestmentReturn = 0
 
     def CAPM_Total_Return(self):
         return self.RiskFreeRate + self.Beta * self.MarketRiskPremium
@@ -26,5 +18,5 @@ class Ratemaking_A_FinEcon_Approach:
         IA = self.InvestableAsset 
         IR = self.InvestmentReturn
                
-        return S/P*(TRR-IA/S*IR)
+        return S / P * (TRR - IA / S * IR)
 

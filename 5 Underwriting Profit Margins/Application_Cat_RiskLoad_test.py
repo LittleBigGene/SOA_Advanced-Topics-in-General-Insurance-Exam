@@ -55,7 +55,8 @@ class test_RiskLoad(unittest.TestCase):
         self.assertAlmostEqual(562, cov_share[0]*.000025, 0)
         self.assertAlmostEqual(7, cov_share[1]*.000025, 0) 
 
-
+        # c) Evaluate which method is more likely to produce appropriate risk loads to be used in pricing.
+        # The covariance share method is more appropriate because it allocates less of the covariance to smaller accounts, which should have lower risk.
 
 if __name__ == '__main__':
     unittest.main()
