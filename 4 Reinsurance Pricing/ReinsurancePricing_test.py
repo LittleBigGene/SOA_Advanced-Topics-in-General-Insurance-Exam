@@ -1,5 +1,5 @@
 import unittest
-from ReinsurancePricing import Reinsurance_Pricing as rp
+from ReinsurancePricing import Reinsurance_Pricing
 
 class test_ReinsurancePricing(unittest.TestCase):
 
@@ -8,7 +8,7 @@ class test_ReinsurancePricing(unittest.TestCase):
 
     def test_spring19_2(self):        
         IncreasedLimitsFactor = {0:0, 1:1, 2:1.16 , 3:1.28 , 4:1.38 }
-        ExpectedLoss = rp(IncreasedLimitsFactor)
+        ExpectedLoss = Reinsurance_Pricing(IncreasedLimitsFactor)
 
         #a
         a1 = ExpectedLoss.exposure_rating(0, 1, IncreasedLimitsFactor)
@@ -41,7 +41,7 @@ class test_ReinsurancePricing(unittest.TestCase):
         margin = .1 * annualPrem
         OccurrenceLimit = 200         
         
-        specialist = rp()
+        specialist = Reinsurance_Pricing()
 
         #a_i no losses
         loss = 0
@@ -66,7 +66,7 @@ class test_ReinsurancePricing(unittest.TestCase):
         self.assertAlmostEqual(.15, a1Profit/(a1Profit-a2Loss), 3 )
 
     def test_fall16_1(self):
-        treaty = rp()
+        treaty = Reinsurance_Pricing()
                        
         a = treaty.loss_cost_rate(
             standard_premium_x=0.6, expected_loss_ratio_x=0.6, 

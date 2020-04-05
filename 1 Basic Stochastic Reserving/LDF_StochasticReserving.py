@@ -1,12 +1,13 @@
+import numpy as np
 
-class Stochastic_Reserving:
-    Pareto_Alpha = 0
-    Pareto_Theta = 0
+class Stochastic_Reserving:    
 
-    def __init__(self, alpha, theta):
-        self.Pareto_Alpha = alpha
-        self.Pareto_Theta = theta
+    def __init__(self):
+        self.Alpha = 0
+        self.Theta = 0
 
     def pareto(self, x):
-        return 1 - (self.Pareto_Theta / (x + self.Pareto_Theta)) ** self.Pareto_Alpha
-        
+        return 1 - (self.Theta / (x + self.Theta)) ** self.Alpha
+    
+    def exponential(self, x):
+        return 1 - np.exp(-x/self.Theta)

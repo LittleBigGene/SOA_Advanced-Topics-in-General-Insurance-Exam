@@ -1,5 +1,5 @@
 import unittest
-from LDF_StochasticReserving import Stochastic_Reserving as sr
+from LDF_StochasticReserving import Stochastic_Reserving
 
 class test_StochasticReserving(unittest.TestCase):
     def test_spring_19_5(self):
@@ -8,7 +8,9 @@ class test_StochasticReserving(unittest.TestCase):
                    31: 7000, 32:10000,
                    41: 8000 }
         
-        clark = sr(4.3335, 21.897)
+        clark = Stochastic_Reserving()
+        clark.Alpha = 4.3335
+        clark.Theta = 21.897
 
         #c
         AY2017 = clark.pareto(18)
@@ -22,6 +24,16 @@ class test_StochasticReserving(unittest.TestCase):
         G6 = clark.pareto(6)
 
         self.assertAlmostEqual(622, 8000*(G30 - AY2017)/G6, 0 )
+
+    def test_fall_16_5(self):
+        # a) Clark's method key assumptions
+        #  Incremental losses are independent and identically distributed.
+        #  The scale parameter is constant.
+        #  Variance estimates are based on the Rao-Cramer lower bound.
+
+        # b
+        pass
+
 
 if __name__ == '__main__':
     unittest.main()

@@ -1,5 +1,5 @@
 import unittest
-from Measure_ChainLadder_Variability import Chain_Ladder as cl
+from Measure_ChainLadder_Variability import Chain_Ladder
 
 class test_ChainLadder(unittest.TestCase):
     def test_spring_19_4(self):
@@ -8,7 +8,7 @@ class test_ChainLadder(unittest.TestCase):
                        31:12000, 32:15000,
                        41:14000 }
         
-        paidTriangle = cl(paidClaims)
+        paidTriangle = Chain_Ladder(paidClaims)
         
         #a
         self.assertAlmostEqual(0.46620, paidTriangle.natural_starting_values(1),5)
@@ -35,7 +35,7 @@ class test_ChainLadder(unittest.TestCase):
                        61:14717, 62:20165,
                        71:16100 }
 
-        self.paidTriangle = cl(self.paidClaims)
+        self.paidTriangle = Chain_Ladder(self.paidClaims)
 
     def test_fall_16_4(self):
         # a
