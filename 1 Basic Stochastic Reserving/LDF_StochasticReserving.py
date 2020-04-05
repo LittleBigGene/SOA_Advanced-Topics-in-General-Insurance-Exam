@@ -13,4 +13,4 @@ class Stochastic_Reserving:
         return 1 - math.exp(-x/self.Theta)
 
     def total_standard_deviation(self, variance, amount, sd):
-        return (variance*amount + sd**2)**0.5
+        return (variance * amount + sd ** 2) ** 0.5

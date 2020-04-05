@@ -1,28 +1,61 @@
 
 import unittest
-from Application_Cat_RiskLoad import Risk_Load as rl
+from Application_Cat_RiskLoad import Risk_Load
 
 class test_RiskLoad(unittest.TestCase):
-    def test_spring_19_1(self):
-        
-        account = rl()
 
-        a = 0.0002 * (account.Variance_Binomial(0.01, 1000) + account.Variance_Binomial(0.02, 3000) + account.Variance_Binomial(0.03, 5000))
+    def setUp(self):
+        self.account = Risk_Load()
+
+    def test_spring_19_1(self):        
+        account = self.account
+
+        a = 0.0002 * (account.binomial_variance(0.01, 1000) + account.binomial_variance(0.02, 3000) + account.binomial_variance(0.03, 5000))
         self.assertAlmostEqual(a, 182.76)
 
-        combined_variance = account.Variance_Binomial(0.01, 1000 + 200) + account.Variance_Binomial(0.02, 3000 + 500) + account.Variance_Binomial(0.03, 5000)        
+        combined_variance = account.binomial_variance(0.01, 1000 + 200) + account.binomial_variance(0.02, 3000 + 500) + account.binomial_variance(0.03, 5000)        
         b = 0.0002 * combined_variance - a
         self.assertAlmostEqual(b, 13.61, 2)
 
-        new_account_variance = account.Variance_Binomial(0.01, 200) + account.Variance_Binomial(0.02, 500) + account.Variance_Binomial(0.03, 0)
+        new_account_variance = account.binomial_variance(0.01, 200) + account.binomial_variance(0.02, 500) + account.binomial_variance(0.03, 0)
         new_account_risk_load = 0.0002 * new_account_variance        
         self.assertNotEqual(b, new_account_risk_load)
 
-        S1 = account.Standard_Deviation(combined_variance)
-        S0 = account.Standard_Deviation(a / 0.0002)
+        S1 = (combined_variance) ** 0.5
+        S0 = (a / 0.0002) ** 0.5
 
-        d = account.Marginal_Surplus_Z(y = 0.15, r = b, S_1 = S1, S_0 = S0 )
+        d = account.marginal_surplus_Z(y = 0.15, r = b, S_1 = S1, S_0 = S0 )
         self.assertAlmostEqual(d, 2.985, 3)
+
+    def test_fall_16_6(self):
+
+        account = self.account
+
+        var_x = [17640000, 2227500]
+        var_y = [78400   , 22275]
+        var_xy = [20070400, 2695275]
+
+        # a
+        # var(x+y) = var(x) + 2cov(x+y) + var(y)
+        cov_xy = (sum(var_xy) - sum(var_x) - sum(var_y)) / 2
+
+        x_riskLoad = account.shapley(sum(var_x), cov_xy)
+        y_riskLoad = account.shapley(sum(var_y), cov_xy)
+
+        self.assertAlmostEqual(532, x_riskLoad*.000025, 0)
+        self.assertAlmostEqual(37, y_riskLoad*.000025, 0)
+
+        # b
+        loss_x = [30000, 15000]
+        loss_y = [2000 , 1500]
+        loss_xy= [32000, 16500]
+
+        cov_share = account.covariance_share(loss_x, loss_y, loss_xy, var_x, var_y, var_xy)
+        
+        self.assertAlmostEqual(562, cov_share[0]*.000025, 0)
+        self.assertAlmostEqual(7, cov_share[1]*.000025, 0) 
+
+
 
 if __name__ == '__main__':
     unittest.main()
