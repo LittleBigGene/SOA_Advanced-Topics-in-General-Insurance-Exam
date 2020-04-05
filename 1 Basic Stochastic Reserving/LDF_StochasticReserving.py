@@ -1,4 +1,4 @@
-import numpy as np
+import math
 
 class Stochastic_Reserving:    
 
@@ -10,4 +10,7 @@ class Stochastic_Reserving:
         return 1 - (self.Theta / (x + self.Theta)) ** self.Alpha
     
     def exponential(self, x):
-        return 1 - np.exp(-x/self.Theta)
+        return 1 - math.exp(-x/self.Theta)
+
+    def total_standard_deviation(self, variance, amount, sd):
+        return (variance*amount + sd**2)**0.5
