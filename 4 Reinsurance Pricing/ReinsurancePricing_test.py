@@ -1,4 +1,5 @@
 import unittest
+import numpy as np
 from ReinsurancePricing import Reinsurance_Pricing
 
 class test_ReinsurancePricing(unittest.TestCase):
@@ -85,6 +86,9 @@ class test_ReinsurancePricing(unittest.TestCase):
     def test_fall_16_8(self):
         treaty = Reinsurance_Pricing()
 
+        def expected (vector):
+            return sum(vector) / len(vector) / 100
+
         # a) Option 1
         lr = [30, 80]
         comm_min=[20,70]
@@ -92,19 +96,27 @@ class test_ReinsurancePricing(unittest.TestCase):
         # loss ratio 30~50, comm 30
         # loss ratio 50~70, comm 25
         # loss ratio 70~80, comm 20              
-        expected_tech = treaty.technical_ratio(lr, comm_min, comm_max, sliding = 0.5)
-        self.assertAlmostEqual(0.81, expected_tech, 2)
+        tech1 = treaty.technical_ratio(lr, comm_min, comm_max, sliding = 0.5)    
+        self.assertAlmostEqual(0.81, expected(tech1), 2)
        
         # b) Option 2        
         # # loss ratio 30~60, comm 27.5
         # # loss ratio 60~70, comm 27.5
-        # # loss ratio 70~80, comm 27.5                    
-        self.assertAlmostEqual(.725, treaty.technical_ratio([30,60],[27.5,70],[27.5,60]) )
-        self.assertAlmostEqual(.90,  treaty.technical_ratio([60,70],[27.5,70],[27.5,60], reassume = 0.5))
-        self.assertAlmostEqual(1.025, treaty.technical_ratio([70,80],[27.5,70],[27.5,60]))
+        # # loss ratio 70~80, comm 27.5   
+        tech = treaty.technical_ratio([30,60],[27.5,70],[27.5,60])                         
+        self.assertAlmostEqual(.725, expected(tech) )
 
-        expected_tech = treaty.technical_ratio(lr,[27.5,70],[27.5,60], reassume = 0.5)
-        self.assertAlmostEqual(0.82, expected_tech, 2)
+        tech = treaty.technical_ratio([60,70],[27.5,70],[27.5,60], reassume = 0.5)
+        self.assertAlmostEqual(.90, expected(tech) )
+
+        tech = treaty.technical_ratio([70,80],[27.5,70],[27.5,60])
+        self.assertAlmostEqual(1.025, expected(tech) )
+        
+        tech2 = treaty.technical_ratio(lr,[27.5,70],[27.5,60], reassume = 0.5)        
+        self.assertAlmostEqual(0.82, expected(tech2), 2)
+
+        # c
+        print(f'Option 1 variance = {np.var(tech1)}; Option 2 variance {np.var(tech2)}')
 
         # d) Explain how the loss ratio distribution on the surplus share treaty would 
         #   qualitatively differ from the loss ratio distribution on the quota share treaty.

@@ -53,7 +53,7 @@ class Reinsurance_Pricing:
             tech.append( loss + comm)
         # print(tech)
         # print(sum(tech) / len(tech))
-        return sum(tech) / len(tech) / 100
+        return tech
 
 if __name__=='__main__':
     treaty = Reinsurance_Pricing()
