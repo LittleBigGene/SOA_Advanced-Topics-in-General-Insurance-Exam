@@ -2,18 +2,18 @@
 # Basics of Reinsurance Pricing
 # David R. Clark
 
-class Reinsurance_Pricing:
-    IncreasedLimitsFactor = {}
+class Reinsurance_Pricing:    
 
-    def __init__(self, ilf = None) -> None:
-        self.IncreasedLimitsFactor = ilf
+    def __init__(self) -> None:
+        #IncreasedLimitsFactor
+        self.ILF = {}
 
-    def exposure_rating(self, underlyingLimit, policyLimit, IncreasedLimitsFactor, excessAmt = 1):
+    def exposure_rating(self, underlyingLimit, policyLimit, excessAmt = 1):
 
-        reinsuranceCoverage = IncreasedLimitsFactor[policyLimit + underlyingLimit] - IncreasedLimitsFactor[underlyingLimit + excessAmt]
+        reinsuranceCoverage = self.ILF[policyLimit + underlyingLimit] - self.ILF[underlyingLimit + excessAmt]
         #print(f'Reinsurance Coverage diff = {reinsuranceCoverage}')
          
-        policy = IncreasedLimitsFactor[policyLimit + underlyingLimit] - IncreasedLimitsFactor[underlyingLimit]
+        policy = self.ILF[policyLimit + underlyingLimit] - self.ILF[underlyingLimit]
         #print(f'policy difference         = {policy}')
       
         return  reinsuranceCoverage / policy
@@ -37,4 +37,23 @@ class Reinsurance_Pricing:
     def loss_cost_rate(self, standard_premium_x, standard_premium_y, expected_loss_ratio_x, expected_loss_ratio_y, allocation_x, allocation_y, layer_x, layer_y):
 
         return (standard_premium_x * expected_loss_ratio_x + standard_premium_y * expected_loss_ratio_y) * (allocation_x * layer_x + allocation_y * layer_y ) 
-        
+    
+    def technical_ratio(self, loss_ratio_range, commission_ratio_min, commission_ratio_max, reassume = 1, sliding = 0):        
+        tech = []        
+        for loss in range(loss_ratio_range[0],loss_ratio_range[1]+1,1):            
+
+            if loss <= commission_ratio_max[1]:
+                comm = commission_ratio_max[0]
+            elif loss > commission_ratio_min[1] - sliding:
+                comm = commission_ratio_min[0]                
+            else:
+                comm = commission_ratio_min[0] + sliding * (loss - commission_ratio_max[1])
+                loss = commission_ratio_max[1] + reassume * (loss - commission_ratio_max[1])
+
+            tech.append( loss + comm)
+        # print(tech)
+        # print(sum(tech) / len(tech))
+        return sum(tech) / len(tech) / 100
+
+if __name__=='__main__':
+    treaty = Reinsurance_Pricing()
