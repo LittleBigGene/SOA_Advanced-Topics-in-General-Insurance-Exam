@@ -49,6 +49,9 @@ class Reinsurance_Pricing:
         x = np.clip(x, 0, 1.2)
         return 1 - (1 - x/1.2)**2
         
+    # 2B. Other Issues On Property Per Risk Treaties
+    # a) Free Cover
+
 
     # 3. Casualty Per Occurrence Excess Treaties
     # a) Experience Rating
@@ -89,7 +92,9 @@ class Reinsurance_Pricing:
     # d) Other Collective Risk Models
 
     # 5. Property Catastrophe Covers
-
+    # 5A. Traditional Products and Methods
+    # That is, other reinsurance inures to the benefit of the catastrophe cover.
+    
     # 5B. Alternative Risk Products
     def additional_prem(self, precentage, loss, margin, annualPrem ):
         return max(0, precentage * (loss + margin - annualPrem))

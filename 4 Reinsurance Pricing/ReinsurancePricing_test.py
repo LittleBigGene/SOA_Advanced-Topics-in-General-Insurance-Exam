@@ -130,12 +130,19 @@ class test_ReinsurancePricing(unittest.TestCase):
         insured_values = np.clip(np.array([100,200,500,1000]), 0, 500)
 
         betaRe = Reinsurance_Pricing()
-
+        
         expo = 0
         for iv in insured_values:
             expo += betaRe.risk_exposure_rating(limit = 400, retention = 100, insured_value = iv)
 
+        # a
         self.assertAlmostEqual(1020833, expo * 0.6 * 1000000, 0)
+
+        # b) explain free cover
+
+        # c) The surplus share reinsurance       will inure to the benefit of the property catastrophe cover.
+        # d) The property per risk excess treaty will inure to the benefit of the property catastrophe cover.
+
 
 if __name__ == '__main__':
     unittest.main()
