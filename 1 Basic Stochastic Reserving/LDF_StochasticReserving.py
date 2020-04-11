@@ -1,3 +1,7 @@
+# CAS Exam 7
+# Clark
+
+
 import math
 
 class Stochastic_Reserving:    

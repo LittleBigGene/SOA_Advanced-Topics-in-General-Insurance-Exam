@@ -1,3 +1,6 @@
+# SOA Exam GIADV
+# Lee
+
 class Excess_Loss_Coverage_And_RetroRating:
     Layers = []
     ExcessAmounts = []

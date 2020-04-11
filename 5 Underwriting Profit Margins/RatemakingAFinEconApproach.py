@@ -1,3 +1,5 @@
+# SOA Exam GIADV
+
 class Ratemaking_A_FinEcon_Approach:
     def __init__(self):
         self.RiskFreeRate = 0
