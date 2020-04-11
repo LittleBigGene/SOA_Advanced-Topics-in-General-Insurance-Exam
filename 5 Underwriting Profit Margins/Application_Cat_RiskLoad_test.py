@@ -82,6 +82,9 @@ class test_RiskLoad(unittest.TestCase):
         h = account.shapley(varH, cov)
         self.assertAlmostEqual(392728, h * 25, 0)
 
+        # d
+        self.assertAlmostEqual(436681, 25 * (var - varE), 0)        
+        self.assertAlmostEqual(226381, 25 * (var - varH), 0)
 
 if __name__ == '__main__':
     unittest.main()

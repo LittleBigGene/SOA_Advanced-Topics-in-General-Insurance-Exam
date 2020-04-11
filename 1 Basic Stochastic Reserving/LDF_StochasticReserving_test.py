@@ -72,9 +72,40 @@ class test_StochasticReserving(unittest.TestCase):
         self.assertAlmostEqual(1043, total_sd, 0) 
 
         # g 
-        actual_pmt = 3800
-        
+        actual_pmt = 3800        
         self.assertLessEqual(actual_pmt - expected_pmt, total_sd)
     
+    def test_spring_16_3(self):
+        #(a) (1.5 points) State two advantages and one disadvantage of using a parametric
+        #    cumulative distribution function to model loss development.
+
+        # Three advantages are 
+        #   (1) it provides smoothing, 
+        #   (2) there are a small number of parameters to estimate, and 
+        #   (3) it does not require equal spacing of data points. 
+        # Disadvantage is that 
+        #   only increasing development patterns can be modeled.
+
+        # b
+        clark = self.clark 
+        clark.Theta = 7.804
+
+        ULT_2013 = 7250 / clark.exponential(clark.average_age(2016 - 2013))
+        self.assertAlmostEqual(7409, ULT_2013, 0)
+
+        # c
+        X = ULT_2013 * clark.exponential(clark.average_age(1))
+        self.assertAlmostEqual(3974, X, 0)
+
+        Y = ULT_2013 * clark.exponential(clark.average_age(2))
+        self.assertAlmostEqual(6671, Y, 0)
+        
+        # d) identify the number of degress fo freedom
+        σ2 = 47
+        # e
+        reserve = ULT_2013 - 7250
+        self.assertAlmostEqual(86, (reserve * σ2) ** 0.5, 0) 
+
+
 if __name__ == '__main__':
     unittest.main()

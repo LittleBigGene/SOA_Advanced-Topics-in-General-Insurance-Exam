@@ -14,3 +14,9 @@ class Stochastic_Reserving:
 
     def total_standard_deviation(self, variance, amount, sd):
         return (variance * amount + sd ** 2) ** 0.5
+
+    def average_age(self, year):
+        if year <= 1:
+            return 6
+        else:
+            return self.average_age(year - 1) + 12
