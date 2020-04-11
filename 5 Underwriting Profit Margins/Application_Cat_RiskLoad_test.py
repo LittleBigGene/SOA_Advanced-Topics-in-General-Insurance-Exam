@@ -58,5 +58,30 @@ class test_RiskLoad(unittest.TestCase):
         # c) Evaluate which method is more likely to produce appropriate risk loads to be used in pricing.
         # The covariance share method is more appropriate because it allocates less of the covariance to smaller accounts, which should have lower risk.
 
+    def test_spring_16_2(self):
+        account = self.account
+
+        p = [.01, .02, .03]
+        L = [100, 200, 400]        
+        varE = account.binomial_variances(p,L)
+
+        p = [.02, .04, .06, .07]
+        L = [500, 400, 200, 100]        
+        varH = account.binomial_variances(p,L)
+
+        corr = 0.2
+        cov = corr * ((varE * varH)**0.5)
+        var = varE + varH + 2 * cov
+
+        # a
+        self.assertAlmostEqual(25 * 23006.24, 25* var, 0)
+
+        # b 
+        e = account.shapley(varE, cov)
+        self.assertAlmostEqual(182428, e * 25, 0)
+        h = account.shapley(varH, cov)
+        self.assertAlmostEqual(392728, h * 25, 0)
+
+
 if __name__ == '__main__':
     unittest.main()
