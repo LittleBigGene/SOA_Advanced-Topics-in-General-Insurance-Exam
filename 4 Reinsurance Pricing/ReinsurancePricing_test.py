@@ -143,6 +143,39 @@ class test_ReinsurancePricing(unittest.TestCase):
         # c) The surplus share reinsurance       will inure to the benefit of the property catastrophe cover.
         # d) The property per risk excess treaty will inure to the benefit of the property catastrophe cover.
 
+    def test_spring_16_8(self):
+        #a
+        # Sliding scale commission
+        # Profit commission
+        # Loss corridor 
 
+        #b
+        # Empirical distribution
+        #   o Does not take into account all possible outcomes
+        #   o If volume or mix changes, will not be able to reflect future volatility
+        #   o If loss developed used Bornhuetter Ferguson or Cape Cod, 
+        #       then historical periods may provide an artificially smooth sequence of loss ratios, 
+        #       which will understate future volatility
+
+        # Single distribution model
+        #   o There is no provision for a positive probability of zero claims
+        #   o Difficult to reflect changes in per-occurrence limits
+
+        # Recursive formula
+        #   o Calculation is difficult when the expected frequency is high o Only one severity distribution can be used
+
+        #c
+        # Carryforward provisions
+        #   Include the carryforward from past years and estimate its effect on the current year only. 
+        #   This approach ignores the potential effect on later years.
+
+        #   Look at the long run of the contract and extend the modification, incorporating a reduction in the variance. 
+        #   For this method there is no obvious way to reduce the variance and it is possible that the contract will not renew.
+
+        pass
+
+
+
+    
 if __name__ == '__main__':
     unittest.main()

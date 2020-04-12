@@ -36,7 +36,9 @@ class Reinsurance_Pricing:
         return max(0, precentage * (annualPrem - margin - loss))
 
     # c)Loss Corridors
+    # The ceding company reassumes a portion of the liability if the loss ratio exceeds a certain amount.
 
+    
 
     # 2. Property Per Risk Excess Treaties
     # a) Experience Rating
