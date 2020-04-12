@@ -4,27 +4,24 @@ from ReinsurancePricing import Reinsurance_Pricing
 
 class test_ReinsurancePricing(unittest.TestCase):
 
-    def setUp(self):
-        pass
-
     def test_spring_19_2(self):        
         ExpectedLoss = Reinsurance_Pricing()
         ExpectedLoss.ILF = {0:0, 1:1, 2:1.16 , 3:1.28 , 4:1.38 }
         
         #a
-        a1 = ExpectedLoss.occurrence_exposure_rating(0, 1)
+        a1 = ExpectedLoss.occurrence_exposure_rating(0, 1, 1)
         self.assertAlmostEqual(a1, 0)
 
-        a2 = ExpectedLoss.occurrence_exposure_rating(0, 2)
+        a2 = ExpectedLoss.occurrence_exposure_rating(0, 2, 1)
         self.assertAlmostEqual( a2, 0.138, 3)
 
-        a3 = ExpectedLoss.occurrence_exposure_rating(0, 3)
+        a3 = ExpectedLoss.occurrence_exposure_rating(0, 3, 1)
         self.assertAlmostEqual( a3, 0.219, 3)
 
-        a4 = ExpectedLoss.occurrence_exposure_rating(1, 2)
+        a4 = ExpectedLoss.occurrence_exposure_rating(1, 2, 1)
         self.assertAlmostEqual( a4, 0.429, 3)
         
-        a5 = ExpectedLoss.occurrence_exposure_rating(1, 3)
+        a5 = ExpectedLoss.occurrence_exposure_rating(1, 3, 1)
         self.assertAlmostEqual(a5, 0.579, 3)
 
         a = .6*(3 * a1 + 4 * a2 + 5 * a3 + 8 * a4 + 9 * a5)
@@ -174,8 +171,37 @@ class test_ReinsurancePricing(unittest.TestCase):
 
         pass
 
+    def test_fall_17_1(self):
+        #a
+        # The aggregate excess factor is the average amount of loss in excess of the aggregate limit,       divided by the expected loss. 
+        # The Table M charge factor   is the average amount of loss in excess of r times the expected loss, divided by the expected loss. 
+        # Hence, they measure the same thing, with a slightly different definition of the point above which the excess is calculated.
 
+        ExpectedLoss = Reinsurance_Pricing()
+        ExpectedLoss.ILF = { 500:1.00, 
+                            1000:1.50, 
+                            1500:1.80, 
+                            2000:2.00, 
+                            2500:2.10,
+                            3000:2.15}
 
-    
+        #b
+        b1 = ExpectedLoss.occurrence_exposure_rating(1000, 1000, 500, 0.1)
+        b2 = ExpectedLoss.occurrence_exposure_rating(1000, 2000, 500, 0.1)
+
+        self.assertAlmostEqual(460 / 1200, b1)
+        self.assertAlmostEqual(365 / 785 , b2)
+
+        total_expeced_loss = .6 * (460 + 365) 
+        #print(total_expeced_loss)
+
+        #c) clash over
+        #d) Describe two ways that a loss on this treaty could occur. 
+        #   Any two of the following were sufficient for full credit.
+        #   • Multiple policies involved in a single occurrence
+        #   • Extra-contractual obligations
+        #   • Rulings awarding damages in excess of policy limits
+        #   • ALAE being included with losses and the total exceeding policy limits
+
 if __name__ == '__main__':
     unittest.main()

@@ -58,15 +58,27 @@ class Reinsurance_Pricing:
     # 3. Casualty Per Occurrence Excess Treaties
     # a) Experience Rating
     # b) Exposure Rating
-    def occurrence_exposure_rating(self, underlyingLimit, policyLimit, excessAmt = 1):
+    def occurrence_exposure_rating(self, underlyingLimit, policyLimit, excessAmt, ϕ = 0 , show = False):
 
-        reinsuranceCoverage = self.ILF[policyLimit + underlyingLimit] - self.ILF[underlyingLimit + excessAmt]
-        #print(f'Reinsurance Coverage diff = {reinsuranceCoverage}')
-         
-        policy = self.ILF[policyLimit + underlyingLimit] - self.ILF[underlyingLimit]
-        #print(f'policy difference         = {policy}')
-      
-        return  reinsuranceCoverage / policy
+        UL_plus_PL      = self.ILF[underlyingLimit + policyLimit]
+        UL_plus_Excess  = self.ILF[underlyingLimit + excessAmt  ]
+        UL              = self.ILF[underlyingLimit              ]
+        PL              = self.ILF[policyLimit                  ]
+
+        reinsurance = (UL_plus_PL - UL_plus_Excess) * (1-ϕ)
+        underlying  = (UL_plus_PL - UL) * (1-ϕ)
+
+        UL_less_Excess = 0
+        if ϕ > 0 :
+            UL_less_Excess = self.ILF[underlyingLimit - excessAmt]
+            
+            reinsurance += (UL - UL_less_Excess) * ϕ
+            underlying  += (PL - 0             ) * ϕ
+
+        if show:
+            print(f'({UL_plus_PL}-{UL_plus_Excess})({1-ϕ}) + ({UL} - {UL_less_Excess})({ϕ})')
+            print(f'over ({UL_plus_PL}-{UL})({1-ϕ}) + ({PL} - {0})({ϕ})')
+        return  reinsurance / underlying
     
 
     # 3B Special Problems on Casualty Excess Treaties
