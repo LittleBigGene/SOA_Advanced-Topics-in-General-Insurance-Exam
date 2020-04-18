@@ -1,59 +1,78 @@
 
 import unittest
-from RatemakingAFinEconApproach import Ratemaking_A_FinEcon_Approach as CAPM
+from sympy import symbols
+from RatemakingAFinEconApproach import Ratemaking_A_FinEcon_Approach as FinEconRatemaking
 
 class test_RatemakingAFinEconApproach(unittest.TestCase):
     def test_spring_19_7(self):
-        targetModel = CAPM()
+        targetModel = FinEconRatemaking()
 
-        targetModel.RiskFreeRate = .02
-        targetModel.Beta = 1.5
-        targetModel.MarketRiskPremium = .06
-        targetModel.Premium = 850000
-        targetModel.Equity = 500000
-        targetModel.InvestableAsset = 1200000
-        targetModel.InvestmentReturn = .07
+        exp_r = symbols('r')
+        sol = targetModel.CAPM_Total_Return(
+            exp_return = exp_r,
+            risk_free=.02,
+            beta=1.5,
+            market_risk_premium=.06            
+        )
         #a
-        self.assertAlmostEqual(.11, targetModel.CAPM_Total_Return()) 
-        #b
-        self.assertAlmostEqual(-.0341, targetModel.UW_Profit_Margin(), 4) 
+        self.assertAlmostEqual(.11, sol) 
 
+        upm = symbols('upm')
+        sol = targetModel.Target_Total_Rate_of_Return_1(
+            P=850000,
+            S=500000,
+            UPM = upm,
+            IA = 1200000,
+            IR = .07,
+            TRR = .11
+        )
+        
+        #b
+        self.assertAlmostEqual(-.0341, sol, 4) 
 
     def test_fall_16_7(self):
-        targetModel = CAPM()
-        targetModel.RiskFreeRate = .01
-        targetModel.Beta = -.2
-        targetModel.MarketRiskPremium = .05
-
+        targetModel = FinEconRatemaking()
+        
         # a
         k = .4 * 3 / 12 + .4 * 6 / 12 + .2 * 9 / 12
         self.assertAlmostEqual(0.45, k)
 
         # b
-        uw_beta = targetModel.Beta * -k
-        self.assertAlmostEqual(0.09, uw_beta)
+        beta = -.2
+        self.assertAlmostEqual(0.09, beta * -k)
 
         # c
-        upm = -k * targetModel.RiskFreeRate + uw_beta * targetModel.MarketRiskPremium
-        self.assertAlmostEqual(0, upm)
+        upm = symbols('upm')
+        sol = targetModel.CAPM_UPM(
+            UPM=upm,
+            k = k,
+            risk_free=.01,
+            uw_beta = beta * -k,
+            market_risk_premium=.05
+        )
+
+        self.assertAlmostEqual(0, sol)
 
         # e) Provide two criticisms of models that apply the Capital Asset Pricing Model to insurance.
         # The model only covers risk that varies with market returns. As such, it ignores unique insurance risks such as catastrophe.
         # The insurance market cannot simply be appended to the stock market.
-        
-
+       
     def test_spring_16_5(self):
+        
+        p = symbols('p')
+        riskFree, riskAdjLoss = 0.01, -0.06
 
-        pvL = 70 / 2 / 0.94 + 70 / 2 / 0.94 / 0.94
-        pvE = 20
-
-        p = 99.7
-
-        pvTUW = (p-20) * 0.4 / 1.01 - 70 * 0.4 / 0.94
-        pvTII = (p+100-20) * 0.01 * .4 /1.01 + (p + 50 - 20 - 35) * 0.01 * 0.4 / 1.01**2
+        targetModel = FinEconRatemaking()        
+        sol = targetModel.Risk_Adjusted_Discount_Technique( 
+            premium = p,                    risk_free = 0.01,            
+            losses = [0, 70 / 2, 70 / 2],   risk_adj_loss = -0.06,
+            expense = 20,                    uw_pl = 70,
+            invest_income = [0, (p + 100 - 20), (p + 50 - 20 - 35)],
+            tax = 0.4
+        )        
 
         #a       
-        self.assertAlmostEqual(p, pvL + pvE + pvTUW + pvTII , 2)
+        self.assertAlmostEqual(sol, 99.69 + 0.02 , 2)
 
         #b) You are also considering using the Target Total Rate of Return Model. 
         #   You need to decide whether to use statutory surplus or the company’s actual equity to derive the required underwriting profit margin.
@@ -67,6 +86,59 @@ class test_RatemakingAFinEconApproach(unittest.TestCase):
         #c) Explain the adjustment to the Capital Asset Pricing Model (CAPM) needed to reflect increased risk.
         
         # The absolute value of beta should be increased.
+
+    def test_fall_17_3(self):
+        targetModel = FinEconRatemaking()        
+
+        #a
+        p = symbols('p')        
+        riskFree = 0.0175
+        sol = targetModel.Target_Total_Rate_of_Return( 
+            P = symbols('p'),
+            S = 0.5 * p,
+            E = 26,
+            L = 70,
+            IR = riskFree,
+            TRR = 0.15
+        )        
+        self.assertAlmostEqual(sol, 101.40, 2)
+
+        #b  
+        p = 101.40
+        r = symbols('r')        
+        sol = targetModel.Risk_Adjusted_Discount_Technique( 
+            premium = p,                  risk_free = 0.0175,            
+            losses = [0, 70 * (1-.35)],   risk_adj_loss = r,
+            expense = 26,                 uw_pl = 0,
+            invest_income = [ (p + p/2 - 26) ],
+            tax = 0.35
+        )    
+        self.assertAlmostEqual(sol, -0.066, 3)
+
+        #c
+        pct_ceded = .6
+        re_A = targetModel.Target_Total_Rate_of_Return( 
+            P = p * (1-pct_ceded) ,
+            S = p/2 * (1-pct_ceded) ,
+            E = 26 * (1-pct_ceded) ,
+            L = 70 * (1-pct_ceded) ,
+            IR = riskFree,
+            TRR = r
+        )        
+        self.assertAlmostEqual( re_A , .15, 3)
+
+        pct_ceded = .4
+        commission = .3
+        re_B = targetModel.Target_Total_Rate_of_Return( 
+            P = p * (1-pct_ceded)  ,
+            S = p/2 * (1-pct_ceded) ,
+            E = 26 - commission * pct_ceded * p,
+            L = 70 * (1-pct_ceded) ,
+            IR = riskFree,
+            TRR = r
+        )        
+        self.assertAlmostEqual(re_B, .209, 3)
+
 
 if __name__ == '__main__':
     unittest.main()
