@@ -8,8 +8,7 @@ class Chain_Ladder:
         self.Triangle = triangle
         self.Dimension = max(triangle.keys()) // 10
         
-        self.AgeToAgeFactors = []
-        self.AgeToUltimateFactors = []
+        self.AgeToAgeFactors , self.AgeToUltimateFactors = [], []        
 
         for dev in range(1, self.Dimension):
             currTotal, nextTotal = 0, 0           
@@ -24,6 +23,7 @@ class Chain_Ladder:
             cumulativeFactor = round(cumulativeFactor * ageFactor, 8)
             self.AgeToUltimateFactors.insert(0, cumulativeFactor)          
          
+
         # print(f'AgeToAgeFactor {self.AgeToAgeFactors}')            
         # print(f'AgeToUltFactor {self.AgeToUltimateFactors}')
 
@@ -45,13 +45,13 @@ class Chain_Ladder:
     # 4 Quantifying the Variability of the Ultimate Claims Amount
     # a^2_k
     def a_proportionality_constant(self, a):
-        f0 = self.AgeToAgeFactors[a-1]        
+        f0 = self.AgeToAgeFactors[a -1]        
         meanSquareError = 0       
         for j in range(1, self.Dimension - a + 1):
             c0 = self.Triangle[ j * 10 + a] 
             c1 = self.Triangle[ j * 10 + a + 1] 
             meanSquareError += c0 * ((c1 / c0 - f0) ** 2)
-            #print(f'MeanSquareError c1={c1} c2={c2} f={self.AgeToAgeFactors[a-1]}' )
+            #print(f'MeanSquareError c1={c1} c2={c2} f={self.AgeToAgeFactors[a -1]}' )
         
         if (self.Dimension - a - 1) > 0:
             return meanSquareError / (self.Dimension - a - 1)
@@ -69,13 +69,13 @@ class Chain_Ladder:
         for d in range(dy, self.Dimension):
             
             a2 = self.a_proportionality_constant(d)
-            f = self.AgeToAgeFactors[d-1]
+            f = self.AgeToAgeFactors[d -1]
 
             k = d
             c = self.Triangle[ ay * 10 + dy] 
             while k > dy:  
                 k = k - 1                                              
-                c = c * self.AgeToAgeFactors[k - 1]
+                c = c * self.AgeToAgeFactors[k -1]
 
             s = 0
             for r in range(1, self.Dimension - d + 1):
@@ -83,11 +83,29 @@ class Chain_Ladder:
             
             error += a2 / f**2 * (1/s + 1/c)                     
 
-        ult = self.Triangle[ ay * 10 + dy  ] * self.AgeToUltimateFactors[dy-1] 
+        ult = self.Triangle[ ay * 10 + dy  ] * self.AgeToUltimateFactors[dy -1] 
         error = ult ** 2 * error
         return error ** 0.5
 
+    def square_of_SE_of_overall(self, ay):    
+        estimator = self.standard_error(ay) ** 2
 
+        #print(estimator)      
+        a2 = self.a_proportionality_constant(self.Dimension-1)
+        f = self.AgeToAgeFactors[(self.Dimension-1) -1]
+        
+        ay1_penultimate = self.Triangle[10 + self.Dimension-1]
+        ay_ultimate = self.Triangle[ay * 10 + self.Dimension]
+
+        ultimate_sum = 0
+        for n in range(ay+1, self.Dimension+1):
+            ultimate_sum += self.Triangle[n*10 + self.Dimension]
+            
+        estimator += ay_ultimate * ultimate_sum * (2 * a2 / f**2) / ay1_penultimate
+
+        #print(f'ay_ultimate {ay_ultimate} ultimate_sum {ultimate_sum} ay1_penultimate {ay1_penultimate}')
+        return estimator
+        
     # 5 Checking the Chain Ladder Assumptions Against the Data
     # 6 Numerical Example
     # 7 Final Remark
@@ -104,9 +122,9 @@ class Chain_Ladder:
 
     def natural_starting_values(self, f):
         if (f == 1):                
-            result = 1 / self.AgeToUltimateFactors[f - 1]            
+            result = 1 / self.AgeToUltimateFactors[f -1]            
         else:
-            result = (self.AgeToAgeFactors[f-2] - 1) / self.AgeToUltimateFactors[f - 2]
+            result = (self.AgeToAgeFactors[f-2] -1) / self.AgeToUltimateFactors[(f-1) -1]
         
         return result
 

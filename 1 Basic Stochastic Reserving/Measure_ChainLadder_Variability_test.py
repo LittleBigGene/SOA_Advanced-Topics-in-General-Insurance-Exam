@@ -89,6 +89,54 @@ class test_ChainLadder(unittest.TestCase):
         #   (where each value is multiplied by a factor that depends only on the development year).
         #   Describe one such alternative model, using words, not formulas.
 
+    def test_fall_17_4(self):        
+        rawPaid = [9146,12176,17670,18546,18128,18517,18888,
+                  10834,15902,20884,23304,22887,23371,23839,
+                  11946,15697,20478,22854,20718,21159,21583,
+                  12414,19333,38991,42905,40935,41806,42644,
+                  14284,20888,25210,27675,26405,26967,27507,
+                  15648,17240,25293,27767,26492,27056,27598,
+                  17221,23473,34438,37806,36070,36838,37576]
+        paidClaims = self.convert_2_triangle(rawPaid, 7)
+        paidTriangle = Chain_Ladder(paidClaims)
+
+        #a
+        self.assertAlmostEqual(1761, paidTriangle.standard_error(4), 0)
+        
+        #b
+        self.assertAlmostEqual(0.011, paidTriangle.square_of_SE_of_overall(2), 3)
+
+        #c) explain why the estimators are dependent?
+
+        #d)
+        ay, dy = 4, 3
+        f = paidTriangle.AgeToAgeFactors[(dy-1) -1]
+        actual_ = paidTriangle.Triangle[ay*10 + dy-1]
+
+        expected = actual_ * f        
+        actual = paidTriangle.Triangle[ay*10 + dy]
+
+        self.assertAlmostEqual(76.43, (actual - expected) / (actual_ ** 0.5),2 )
+
+        #e
+        n, p = 6*(6+1)/2, 6
+        
+        #f 
+        SSE = 184086659
+        venter = Venter_Factors()
+        self.assertAlmostEqual(818163, venter.adjusted_SSE(SSE, n, p), 0)
+        self.assertAlmostEqual(325979727, venter.adjusted_SSE_AIC(SSE, n, p), 0)
+        self.assertAlmostEqual(439338494, venter.adjusted_SSE_BIC(SSE, n, p), 0)
+
+    def convert_2_triangle(self, rawTable, size):
+        triangle = {}
+        cursor = 0
+        for ay in range(1, size + 1):
+            for dy in range(1, size + 1):   
+                triangle[ay*10 + dy] = rawTable[cursor]
+                cursor += 1
+        return triangle
+
 
 if __name__ == '__main__':
     unittest.main()
