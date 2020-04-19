@@ -2,18 +2,15 @@ import unittest
 from LDF_StochasticReserving import Stochastic_Reserving
 
 class test_StochasticReserving(unittest.TestCase):
-    def setUp(self):
-        self.clark = Stochastic_Reserving()
-
     def test_spring_19_5(self):
         claims = { 11: 5000, 12: 7500, 13: 8000, 14: 8500,
                    21: 6000, 22: 9000, 23: 8500,
                    31: 7000, 32:10000,
                    41: 8000 }
 
-        clark = self.clark                
-        clark.Alpha = 4.3335
-        clark.Theta = 21.897
+        clark = Stochastic_Reserving()               
+        clark.α = 4.3335
+        clark.θ = 21.897
 
         #c
         AY2017 = clark.pareto(18)
@@ -32,7 +29,7 @@ class test_StochasticReserving(unittest.TestCase):
         claims = { 11: 4000, 12: 7000, 13: 8000,
                    21: 5000, 22: 7000, 
                    31: 6000}
-        clark = self.clark   
+        clark = Stochastic_Reserving()  
 
         on_level_premium = 12000
 
@@ -43,7 +40,7 @@ class test_StochasticReserving(unittest.TestCase):
 
         # b        
         ELR = 71.15/100
-        clark.Theta = 7.293
+        clark.θ = 7.293
         
         reserve = on_level_premium * (1 - clark.exponential(6)) * ELR
         est_ult_losses = claims[31] + reserve
@@ -87,8 +84,8 @@ class test_StochasticReserving(unittest.TestCase):
         #   only increasing development patterns can be modeled.
 
         # b
-        clark = self.clark 
-        clark.Theta = 7.804
+        clark = Stochastic_Reserving()
+        clark.θ = 7.804
 
         ULT_2013 = 7250 / clark.exponential(clark.average_age(2016 - 2013))
         self.assertAlmostEqual(7409, ULT_2013, 0)
@@ -106,6 +103,60 @@ class test_StochasticReserving(unittest.TestCase):
         reserve = ULT_2013 - 7250
         self.assertAlmostEqual(86, (reserve * σ2) ** 0.5, 0) 
 
+    def test_fall_17_5(self):
+        cumulative_reported = [8000, 9500, 10000,
+                               4000, 6000, 
+                               6000]
+        clark = Stochastic_Reserving()  
 
+        clark.ω = 1.1736
+        clark.θ = 3.0544
+
+        G1 = clark.loglogistic(clark.average_age(1))
+        G2 = clark.loglogistic(clark.average_age(2))
+        G3 = clark.loglogistic(clark.average_age(3))
+
+        #a
+        tail = 1 - G3
+        self.assertAlmostEqual(0.064, tail, 3)
+
+        #b         
+        ULT = 10000 / G3 + 6000 / G2 + 6000 / G1
+        Reported = 10000 + 6000 + 6000
+        IBNR = ULT - Reported
+
+        self.assertAlmostEqual(4150, IBNR, 0)
+
+        #c        
+        incremental_reported = [8000, 9500 - 8000, 10000 - 9500,
+                                4000, 6000 - 4000]
+        G = [G1, G2 - G1, G3 - G2,
+             G1, G2 - G1]
+        ULT = [10000 / G3, 10000 / G3, 10000 / G3,
+                6000 / G2,  6000 / G2]
+                             
+        var_estimator = clark.estimate_variance(incremental_reported, ULT, G)
+        self.assertAlmostEqual(647, var_estimator, 0)
+
+        #d
+        self.assertAlmostEqual(1639, (IBNR * var_estimator)**0.5, 0)
+
+        #e
+        actual = [6000 - 4000]
+        ult = [6000 / G2]
+        g =  [(G2 - G1)]
+
+        var = clark.estimate_variance(actual, ult, g)
+        normalized_residual = (var / var_estimator) ** 0.5
+        self.assertAlmostEqual(0.69, normalized_residual, 2)
+        
+        #f) Assess whether the residuals support the use of the chosen model.
+        #   There are two considerations:
+        #       1. Are the residuals randomly scattered about zero? 
+        #       Yes, the points are about the same amount above and below.
+        #       2. Is the variability roughly constant? 
+        #       No, it seems to be increasing. The residuals do not support the model.
+        #       Or with the small number of points, a trend is hard to establish.
+        
 if __name__ == '__main__':
     unittest.main()

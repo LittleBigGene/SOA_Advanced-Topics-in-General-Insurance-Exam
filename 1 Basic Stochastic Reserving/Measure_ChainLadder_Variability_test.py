@@ -1,6 +1,6 @@
 import unittest
 from Measure_ChainLadder_Variability import Chain_Ladder
-from Venter_Factors import Venter_Factors
+from Venter_Factors import Venter_Factors, ChainLadderHelper
 
 class test_ChainLadder(unittest.TestCase):
     def test_spring_19_4(self):
@@ -97,7 +97,9 @@ class test_ChainLadder(unittest.TestCase):
                   14284,20888,25210,27675,26405,26967,27507,
                   15648,17240,25293,27767,26492,27056,27598,
                   17221,23473,34438,37806,36070,36838,37576]
-        paidClaims = self.convert_2_triangle(rawPaid, 7)
+
+        helper = ChainLadderHelper()
+        paidClaims = helper.convert_2_triangle(rawPaid, 7)
         paidTriangle = Chain_Ladder(paidClaims)
 
         #a
@@ -128,14 +130,7 @@ class test_ChainLadder(unittest.TestCase):
         self.assertAlmostEqual(325979727, venter.adjusted_SSE_AIC(SSE, n, p), 0)
         self.assertAlmostEqual(439338494, venter.adjusted_SSE_BIC(SSE, n, p), 0)
 
-    def convert_2_triangle(self, rawTable, size):
-        triangle = {}
-        cursor = 0
-        for ay in range(1, size + 1):
-            for dy in range(1, size + 1):   
-                triangle[ay*10 + dy] = rawTable[cursor]
-                cursor += 1
-        return triangle
+    
 
 
 if __name__ == '__main__':
