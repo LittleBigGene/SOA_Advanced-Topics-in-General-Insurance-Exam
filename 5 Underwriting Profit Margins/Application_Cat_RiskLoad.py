@@ -9,13 +9,18 @@ import numpy
 
 class Risk_Load:
     # 1 Introduction
+    def __init__(self) -> None:
+        self.p = [0,0]
+        self.var_x = [0,0]
+        self.var_y = [0,0]
+        self.var_xy = [0,0]
 
     # 2 The catastrophe occurrence size-of-loss ditribution
 
-    def binomial_variances(self, prob, Loss):
-        result = 0
-        for p, L in zip(prob, Loss):
-            result += self.binomial_variance(p, L)
+    def binomial_variances(self, Loss):
+        result = []
+        for p, L in zip(self.p, Loss):
+            result.append(self.binomial_variance(p, L))
         return result
         
     def binomial_variance(self, prob, Loss):
@@ -55,6 +60,14 @@ class Risk_Load:
     #   TABLE 3 Renewing X and Y: MS method
     #   TABLE 4 Renewing X and Y: MV method
 
+    def mv_renewal_risk_load(self, L_x, L_y, λ):
+        L_xy = [x + y for x, y in zip(L_x, L_y)]
+
+        sol_x = (sum(self.var_xy) - sum(self.var_y) ) * λ
+        sol_y = (sum(self.var_xy) - sum(self.var_x) ) * λ
+        
+        return [sol_x, sol_y]
+
     # 7 Exploring the differences between new and renewal
 
     #   Build-Up Δ Std Dev(X) = Std Dev (X)
@@ -85,19 +98,20 @@ class Risk_Load:
 
     #10 Sharing the covariance
 
-    def covariance_share(self, loss_x, loss_y, loss_xy, 
-                                var_x,  var_y,  var_xy):
-        x, y = sum(var_x), sum(var_y)
+    def covariance_share(self, loss_x, loss_y, λ = 1):
+        loss_xy = [x + y for x, y in zip(loss_x, loss_y)]
+
+        x, y = sum(self.var_x), sum(self.var_y)
 
         for i in range(2):
             weight_x = loss_x[i]/loss_xy[i] 
             weight_y = loss_y[i]/loss_xy[i] 
-            cov = var_xy[i] - var_x[i] - var_y[i]
+            cov = self.var_xy[i] - self.var_x[i] - self.var_y[i]
 
             x += weight_x * cov
             y += weight_y * cov
             
-        return [x,y]
+        return [ x * λ, y * λ ]
 
     #   TABLE 7 Building up X and Y: Shapley Value Method
     #   TABLE 8 Building up X and Y: Covariance Share Method
