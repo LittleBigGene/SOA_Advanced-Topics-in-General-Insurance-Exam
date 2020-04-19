@@ -26,7 +26,7 @@ class test_RiskLoad(unittest.TestCase):
 
     def test_fall_16_6(self):
         account = Risk_Load()
-
+        
         account.var_x = [17640000, 2227500]
         account.var_y = [78400   , 22275]
         account.var_xy = [20070400, 2695275]
@@ -35,20 +35,20 @@ class test_RiskLoad(unittest.TestCase):
         # var(x+y) = var(x) + 2cov(x+y) + var(y)
         cov_xy = (sum(account.var_xy) - sum(account.var_x) - sum(account.var_y)) / 2
 
-        x_riskLoad = account.shapley(sum(account.var_x), cov_xy)
-        y_riskLoad = account.shapley(sum(account.var_y), cov_xy)
+        x_riskLoad = account.shapley(sum(account.var_x), cov_xy, .000025)
+        y_riskLoad = account.shapley(sum(account.var_y), cov_xy, .000025)
 
-        self.assertAlmostEqual(532, x_riskLoad*.000025, 0)
-        self.assertAlmostEqual(37, y_riskLoad*.000025, 0)
+        self.assertAlmostEqual(532, x_riskLoad, 0)
+        self.assertAlmostEqual(37, y_riskLoad, 0)
 
         # b
         loss_x = [30000, 15000]
         loss_y = [2000 , 1500]
 
-        cov_share = account.covariance_share(loss_x, loss_y)
+        cov_share = account.covariance_share(loss_x, loss_y, .000025)
         
-        self.assertAlmostEqual(562, cov_share[0]*.000025, 0)
-        self.assertAlmostEqual(7, cov_share[1]*.000025, 0) 
+        self.assertAlmostEqual(562, cov_share[0], 0)
+        self.assertAlmostEqual(7, cov_share[1], 0) 
 
         # c) Evaluate which method is more likely to produce appropriate risk loads to be used in pricing.
         # The covariance share method is more appropriate because it allocates less of the covariance to smaller accounts, which should have lower risk.

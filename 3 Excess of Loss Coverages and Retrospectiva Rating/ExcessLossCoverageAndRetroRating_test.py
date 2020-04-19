@@ -58,6 +58,8 @@ class test_ExcessLossCoverageAndRetroRating(unittest.TestCase):
         #c) Explain how Table L differs from Table M.
         # Table L incorporates a per accident limit on losses.
 
-        
+    def test_fall_17_7(self):
+        pass
+
 if __name__ == '__main__':
     unittest.main()
