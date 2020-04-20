@@ -203,5 +203,31 @@ class test_ReinsurancePricing(unittest.TestCase):
         #   • Rulings awarding damages in excess of policy limits
         #   • ALAE being included with losses and the total exceeding policy limits
 
+    def test_fall_17_8(self):
+        cat = Reinsurance_Pricing()
+        loss_size_probability = [0, .4, .3, .2, .1]
+        aggregate_losses_prob = [.5,.1,.095,.084,.0661,.0403,.0311,.0231,.0166,.0119]
+
+        #a
+        a10 = cat.aggregate_loss_probability(loss_size_probability, aggregate_losses_prob, 10)
+        self.assertAlmostEqual(0.0087, a10/2, 4)
+
+        #b
+        first_m, second_m = 0,0
+        for s in range(1,5):
+            first_m  += loss_size_probability[s] * s 
+            second_m += loss_size_probability[s] * s**2
+        
+        Exp_s = first_m
+        Var_s = second_m - first_m ** 2
+
+        # given N mean, variance = 1, 2
+        E_Agg = Exp_s 
+        Var_Agg = Var_s + 4 * 2 # don't understand here
+        cv = Var_Agg**0.5 /E_Agg
+
+        self.assertAlmostEqual(1.5, cv)
+
+
 if __name__ == '__main__':
     unittest.main()

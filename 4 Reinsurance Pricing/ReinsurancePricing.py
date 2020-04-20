@@ -103,6 +103,13 @@ class Reinsurance_Pricing:
     # a) Empirical Distribution
     # b) Single Distribution Model
     # c) Recursive Calculation of Aggregate Distribution
+    def aggregate_loss_probability(self, S, A, loss_amt):
+        a = 0
+        for l in range(1,len(S)):
+            a += A[loss_amt-l] * S[l]
+        return a
+
+
     # d) Other Collective Risk Models
 
     # 5. Property Catastrophe Covers
