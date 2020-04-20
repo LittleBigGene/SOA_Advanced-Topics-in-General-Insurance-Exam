@@ -9,6 +9,8 @@ class Reinsurance_Pricing:
     def __init__(self) -> None:
         #IncreasedLimitsFactor
         self.ILF = {}
+        self.mean = 0
+        self.variance = 0
 
     # 1. Proportional Treaties
     # Quota Share, Surplus Share
@@ -103,13 +105,31 @@ class Reinsurance_Pricing:
     # a) Empirical Distribution
     # b) Single Distribution Model
     # c) Recursive Calculation of Aggregate Distribution
-    def aggregate_loss_probability(self, S, A, loss_amt):
-        a = 0
-        for l in range(1,len(S)):
-            a += A[loss_amt-l] * S[l]
-        return a
+    def aggregate_loss_probability(self, S, A, k, show=False):
 
+        a = 0        
+        for i in range(1, min(len(S), k+1)):                        
+            a += self.mean / k * i * A[k-i] * S[i]
+            if show:
+                print(f'i {i} k {k}; {self.mean} / {k} * {i} * {A[k-i]} * {S[i]}')
+            
+        return a 
 
+        # Text Book Example
+        # treaty = Reinsurance_Pricing()
+        # treaty.mean = 3
+        # S = [0, .4, .15, .1, .35]
+        # A = [.05, 0.06, 0.059, 0.057, 0.096, 0.094]
+        # p = treaty.aggregate_loss_probability(S,A,6, show=True)
+        # print(p)
+
+    def moment_of_loss(self, loss_size_probability):
+        first_m, second_m = 0,0
+        for s in range(1,len(loss_size_probability)):
+            first_m  += loss_size_probability[s] * s 
+            second_m += loss_size_probability[s] * s**2
+        return [first_m, second_m]
+    
     # d) Other Collective Risk Models
 
     # 5. Property Catastrophe Covers
@@ -122,7 +142,11 @@ class Reinsurance_Pricing:
 
     # 6. Calculating the Final Price
 
-
 if __name__=='__main__':
     treaty = Reinsurance_Pricing()
-    treaty.risk_exposure_rating()
+    treaty.mean = 3
+    S = [0, .4, .15, .1, .35]
+    A = [.05, 0.06, 0.059, 0.057, 0.096, 0.094]
+    p = treaty.aggregate_loss_probability(S,A,6, show=True)
+
+    print(p)

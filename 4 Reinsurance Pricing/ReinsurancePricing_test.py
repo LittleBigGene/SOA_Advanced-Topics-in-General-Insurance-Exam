@@ -205,29 +205,65 @@ class test_ReinsurancePricing(unittest.TestCase):
 
     def test_fall_17_8(self):
         cat = Reinsurance_Pricing()
+        cat.mean, cat.variance = 1, 2 # geometric distribution
+
         loss_size_probability = [0, .4, .3, .2, .1]
         aggregate_losses_prob = [.5,.1,.095,.084,.0661,.0403,.0311,.0231,.0166,.0119]
 
         #a
-        a10 = cat.aggregate_loss_probability(loss_size_probability, aggregate_losses_prob, 10)
-        self.assertAlmostEqual(0.0087, a10/2, 4)
+        p = cat.aggregate_loss_probability(loss_size_probability, aggregate_losses_prob, 4)
+        self.assertAlmostEqual(.008765, p/10, 4) # SOA Solution 0.0087
 
         #b
-        first_m, second_m = 0,0
-        for s in range(1,5):
-            first_m  += loss_size_probability[s] * s 
-            second_m += loss_size_probability[s] * s**2
+        m = cat.moment_of_loss(loss_size_probability)
         
-        Exp_s = first_m
-        Var_s = second_m - first_m ** 2
+        aggregate_mean = cat.mean * m[0]
+        aggregate_var  = cat.variance * m[1]
+        cv = aggregate_var**0.5 /aggregate_mean
 
-        # given N mean, variance = 1, 2
-        E_Agg = Exp_s 
-        Var_Agg = Var_s + 4 * 2 # don't understand here
-        cv = Var_Agg**0.5 /E_Agg
+        self.assertAlmostEqual(1.581, cv, 3)
 
-        self.assertAlmostEqual(1.5, cv)
+    def test_spring_17_8(self):
+        cat = Reinsurance_Pricing()
+        cat.mean, cat.variance = 2, 2 # poisson distribution
+        loss_size_probability = [0, .4, .3, .2, .1]
+        aggregate_losses_prob = [0.1353, 0.1083, 0.1245, 0.1306, 0.1230, 0.0982, 0.0804, 0.0621, 0.0453, 0.0318]
+        
+         #a
+        p = cat.aggregate_loss_probability(loss_size_probability, aggregate_losses_prob, 10)
+        self.assertAlmostEqual(.0219, p, 4)
 
+        #b
+        m = cat.moment_of_loss(loss_size_probability)
+        
+        aggregate_mean = cat.mean * m[0]
+        aggregate_var  = cat.variance * m[1]
+        cv = aggregate_var**0.5 /aggregate_mean
+        
+        self.assertAlmostEqual(0.7906, cv, 4)
 
+        #c) calculate parameters for lognormal distribution          
+
+    def test_spring_18_8(self):
+        cat = Reinsurance_Pricing()
+        cat.mean, cat.variance = 1, 0.5*0.5 # binomial distribution
+        loss_size_probability = [0, .25, .25, .25, .25]
+        aggregate_losses_prob = [0.250000, 0.125000, 0.140625, 0.156250,
+                                 0.171875, 
+                                 0.062500, 0.046875, 0.031250, 
+                                 0.015625] # 4,8 unknown
+        
+        #a
+        p = cat.aggregate_loss_probability(loss_size_probability, aggregate_losses_prob, 4)
+        self.assertAlmostEqual(.171875, p + 0.05859375)
+
+        p = cat.aggregate_loss_probability(loss_size_probability, aggregate_losses_prob, 8)
+        self.assertAlmostEqual(.015625, p/2 )
+
+        
+
+        
+
+     
 if __name__ == '__main__':
     unittest.main()
