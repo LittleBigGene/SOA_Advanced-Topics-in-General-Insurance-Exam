@@ -1,5 +1,6 @@
 import unittest
 import numpy as np
+import pandas as pd
 from ReinsurancePricing import Reinsurance_Pricing
 
 class test_ReinsurancePricing(unittest.TestCase):
@@ -223,6 +224,38 @@ class test_ReinsurancePricing(unittest.TestCase):
 
         self.assertAlmostEqual(1.581, cv, 3)
 
+    def test_spring_17_1(self):
+        cat = Reinsurance_Pricing()
+
+        exp = {
+            'Accident Date': [2014,2014,2015,2015,2016,2016],
+            'Untrended Loss': [200, 400, 550,1000, 600, 450],
+            'Untrended ALAE': [100, 200,   0, 500, 300,   0]
+            }
+        
+        exp = cat.occurrence_experience_rating(exp, 
+            layer = 200, excessOf = 400, trend=1.06, policeLimit= 1000, valYear=2018)
+        
+        undev14 = exp[exp['Accident Date'] == 2014]
+        undev15 = exp[exp['Accident Date'] == 2015]
+        undev16 = exp[exp['Accident Date'] == 2016]
+
+        dev14 = sum(undev14['Layer Loss+ALAE']) * 1.1
+        dev15 = sum(undev15['Layer Loss+ALAE']) * 1.5
+        dev16 = sum(undev16['Layer Loss+ALAE']) * 2
+
+        #print(f"({dev14} + {dev15} + {dev16}) ")
+        # a
+        self.assertAlmostEqual(0.059, (dev14 + dev15 + dev16)/ 30000, 3)
+
+        # b) The ceding company requests alternative quotes on the following two layers:
+        #   (i)  200,000 excess of 300,000
+        #   (ii) 200,000 excess of 200,000
+
+        # For both cases revised (likely smaller) development factors would be needed
+        # For case (ii) information about untrended losses below 200,000 would be needed. 
+        #   Assuming the 6% trend factor applies to these losses, untrended losses of 200,000/1.06^4 = 158,419 (likely rounded to 150,000) or larger would be required.
+
     def test_spring_17_8(self):
         cat = Reinsurance_Pricing()
         cat.mean, cat.variance = 2, 2 # poisson distribution
@@ -259,10 +292,6 @@ class test_ReinsurancePricing(unittest.TestCase):
 
         p = cat.aggregate_loss_probability(loss_size_probability, aggregate_losses_prob, 8)
         self.assertAlmostEqual(.015625, p/2 )
-
-        
-
-        
 
      
 if __name__ == '__main__':

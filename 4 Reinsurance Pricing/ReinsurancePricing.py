@@ -3,6 +3,7 @@
 # David R. Clark
 
 import numpy as np
+import pandas as pd
 
 class Reinsurance_Pricing:    
 
@@ -59,6 +60,25 @@ class Reinsurance_Pricing:
 
     # 3. Casualty Per Occurrence Excess Treaties
     # a) Experience Rating
+
+    def occurrence_experience_rating(self, experience, layer, excessOf, trend, policeLimit, valYear):        
+        pd.options.display.max_columns = None        
+        exp = pd.DataFrame(data=experience)
+
+        exp['Trended Loss'] = exp['Untrended Loss'] * trend**(valYear-exp['Accident Date'])
+        exp['Trended ALAE'] = exp['Untrended ALAE'] * trend**(valYear-exp['Accident Date'])
+        exp['Trended Loss'] = np.where(exp['Trended Loss']>policeLimit, policeLimit, exp['Trended Loss'])
+        
+        exp['Layer Loss'] = np.where(exp['Trended Loss']>excessOf, exp['Trended Loss']-excessOf , 0)
+        exp['Layer Loss'] = np.where(exp['Layer Loss'] >layer, layer, exp['Layer Loss'] )
+
+        exp['Layer ALAE'] = exp['Trended ALAE'] / exp['Trended Loss'] * exp['Layer Loss'] 
+        exp['Layer Loss+ALAE'] = exp['Layer ALAE'] + exp['Layer Loss']
+
+        return exp[exp['Layer Loss']>0]
+
+
+
     # b) Exposure Rating
     def occurrence_exposure_rating(self, underlyingLimit, policyLimit, excessAmt, ϕ = 0 , show = False):
 
@@ -143,10 +163,5 @@ class Reinsurance_Pricing:
     # 6. Calculating the Final Price
 
 if __name__=='__main__':
-    treaty = Reinsurance_Pricing()
-    treaty.mean = 3
-    S = [0, .4, .15, .1, .35]
-    A = [.05, 0.06, 0.059, 0.057, 0.096, 0.094]
-    p = treaty.aggregate_loss_probability(S,A,6, show=True)
+    pass
 
-    print(p)
