@@ -139,6 +139,29 @@ class test_RatemakingAFinEconApproach(unittest.TestCase):
         )        
         self.assertAlmostEqual(re_B, .209, 3)
 
+    def test_spring_17_3(self):
+        #a) assumptions of the Captial Asset Pricing Model
+        #   • Investors are risk averse.
+        #   • Investors are price takers.
+        #   • Investors have identical expectations.
+        #   • Investors have no transaction costs.
+        #   • Investors can borrow or invest at the risk-free rate.
+        #   • Assets are infinitely divisible.
+
+        #b)
+        targetModel = FinEconRatemaking()     
+
+        upm = symbols('upm')
+        sol = targetModel.CAPM_UPM(
+            UPM=upm,
+            k = 0.75,
+            risk_free=0.02,
+            uw_beta = 0.5,
+            market_risk_premium=.03,
+            tax= [0.231,0.35],
+            equity_to_premium = 2
+        )
+        self.assertAlmostEqual(1.15/100, sol, 4)
 
 if __name__ == '__main__':
     unittest.main()

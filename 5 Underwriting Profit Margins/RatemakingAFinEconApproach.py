@@ -43,12 +43,23 @@ class Ratemaking_A_FinEcon_Approach:
     #   The model requires theuse of the market risk premium and past market portfolio returns and individual asset returns to arrive at beta estimatesfor individual assets
     #   This assumesthat such relationshipsare stable, when in fact they are likely to changeover time. 
 
+    #   Assumptions of the Captial Asset Pricing Model
+    #   • Investors are risk averse diversifiers who try to maximize expected return and minimize risk.
+    #   • Investors are price takers, in that they act as if their trades have no effect on asset prices.
+    #   • Investors have identical expectations about asset expected returns and standard deviations.
+    #   • Investors have no transaction costs or taxes.
+    #   • Investors can borrow or invest at the risk-free rate without any limit.
+    #   • Assets are infinitely divisible.
 
     # 4 Application of the CAPM to Insurance
     # k, the funds generating coefficient estimate
-    def CAPM_UPM(self, UPM, k, risk_free, uw_beta, market_risk_premium):
-
-        sol = solve(-k * risk_free + uw_beta * market_risk_premium - UPM)
+    def CAPM_UPM(self, UPM, k, risk_free, uw_beta, market_risk_premium, tax = [0,0], equity_to_premium = 1):
+        sol = solve(
+            - k                 * risk_free *(1-tax[0])/(1-tax[1]) 
+            + equity_to_premium * risk_free *   tax[0] /(1-tax[1]) 
+            + uw_beta * market_risk_premium 
+            - UPM
+            )
         return sol[0] 
 
     # 5 Discounted Cash Flow Analysis
