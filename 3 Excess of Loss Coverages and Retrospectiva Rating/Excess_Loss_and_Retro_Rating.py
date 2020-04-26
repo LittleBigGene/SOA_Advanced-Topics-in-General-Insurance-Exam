@@ -1,7 +1,8 @@
 # SOA Exam GIADV
 # Lee
+from sympy import symbols, solve
 
-class Excess_Loss_Coverage_And_RetroRating:
+class Excess_Loss_and_Retro_Rating:
     # 1 Introduction
     #   Size and Layer
     #   G(x) = 1 - F(x)
@@ -60,4 +61,33 @@ class Excess_Loss_Coverage_And_RetroRating:
             
         return saving / len(self.Table_M_Loss_Ratios) / avg_loss_ratio
 
+    
+    def retro_rating(self):
+        b = symbols('basic premium')        
+        B = symbols('basic premium ratio')
+        P = symbols('premium')
+
+        b = B * P
+                
+        R = symbols('retro rating')
+        C = symbols('loss conversion factor (LCF)')
+        L = symbols('loss')
+
+        R = b + C * L
+
+        G = symbols('max premium')
+        H = symbols('min premium')
+        E = symbols('expected loss')
+        L_G = symbols('max loss')
+        L_H = symbols('min loss')
+
+        G = b + C * L_G
+        r_G = L_G / E
+
+        H = b + C * L_H
+        r_H = L_H / E
+
+        I = symbols('the net insurance chart of Table M')
+        
+    
     # 5 Conclusion

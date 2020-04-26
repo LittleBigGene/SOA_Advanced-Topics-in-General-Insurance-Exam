@@ -1,9 +1,9 @@
 import unittest
-from ExcessLossCoverageAndRetroRating import Excess_Loss_Coverage_And_RetroRating
+from Excess_Loss_and_Retro_Rating import Excess_Loss_and_Retro_Rating
 
 class test_ExcessLossCoverageAndRetroRating(unittest.TestCase):
     def test_spring_19_6(self):
-        coverage = Excess_Loss_Coverage_And_RetroRating()
+        coverage = Excess_Loss_and_Retro_Rating()
         coverage.Layers = [0,100,200]
         coverage.ExcessAmounts = [100,100,999]
         coverage.Trend = 0.1
@@ -24,7 +24,7 @@ class test_ExcessLossCoverageAndRetroRating(unittest.TestCase):
         pass
 
     def test_spring_16_6(self):
-        retro = Excess_Loss_Coverage_And_RetroRating()
+        retro = Excess_Loss_and_Retro_Rating()
 
         #a) define Table M in a retro rating plan
 
@@ -61,5 +61,12 @@ class test_ExcessLossCoverageAndRetroRating(unittest.TestCase):
     def test_fall_17_7(self):
         pass
 
+    def test_spring_17_7(self):
+        # a) b + C(E - I) = e + E
+        # b) H = b + C * E * r_H 
+        # c) G = b + C * E * r_G 
+        # d) I = E [φ(r_G) - ψ(r_H)]
+        pass
+    
 if __name__ == '__main__':
     unittest.main()
