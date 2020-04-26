@@ -1,5 +1,6 @@
 
 import unittest
+from sympy import symbols
 from Application_Cat_RiskLoad import Risk_Load
 
 class test_RiskLoad(unittest.TestCase):
@@ -21,8 +22,8 @@ class test_RiskLoad(unittest.TestCase):
         S1 = (combined_variance) ** 0.5
         S0 = (a / 0.0002) ** 0.5
 
-        d = account.marginal_surplus_Z(y = 0.15, r = b, S_1 = S1, S_0 = S0 )
-        self.assertAlmostEqual(d, 2.985, 3)
+        d = account.marginal_surplus(z=symbols('z'), y = 0.15, r = b, SD_L1 = S1, SD_L0 = S0 )
+        self.assertAlmostEqual(2.985, d, 3)
 
     def test_fall_16_6(self):
         account = Risk_Load()
@@ -106,6 +107,33 @@ class test_RiskLoad(unittest.TestCase):
         self.assertAlmostEqual(209.04, sol[0])
         self.assertAlmostEqual( 48.24, sol[1])
         
+    def test_spring_17_6(self):
+        account = Risk_Load()
+
+        sd_x = 0.3 * 2000
+        sd_y = 0.4 * 450
+        cov_xy = 0.2*sd_x*sd_y
+        var_xy = sd_x**2 + sd_y**2 + 2 * cov_xy
+
+        #a
+        risk_load = account.marginal_surplus(z=2.33, r=symbols('r'), y=0.1, SD_L1=var_xy**0.5)
+        self.assertAlmostEqual(139.8, risk_load, 1)
+
+        #b
+        renewal_x = account.marginal_surplus(z=2.33, r=symbols('r'), y=0.1, SD_L1=var_xy**0.5, SD_L0=sd_y)
+        self.assertAlmostEqual(102, renewal_x, 0)
+        renewal_y = account.marginal_surplus(z=2.33, r=symbols('r'), y=0.1, SD_L1=var_xy**0.5, SD_L0=sd_x)
+        self.assertAlmostEqual(13, renewal_y, 0)
+
+        #c) State a problem with using the Marginal Surplus method to calculate renewal risk loads.
+        #   Individual risk loads will add to less than the total risk load.
+
+        #d
+        x = account.shapley(sd_x**2, cov_xy, risk_load/var_xy)        
+        self.assertAlmostEqual(123-1, x, 0)
+        y = account.shapley(sd_y**2, cov_xy, risk_load/var_xy)
+        self.assertAlmostEqual(17,y,0)
+
 
 if __name__ == '__main__':
     unittest.main()

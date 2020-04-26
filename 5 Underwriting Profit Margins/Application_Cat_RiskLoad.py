@@ -6,6 +6,7 @@
 
 import math
 import numpy
+from sympy import solve
 
 class Risk_Load:
     # 1 Introduction
@@ -28,20 +29,12 @@ class Risk_Load:
 
 
     # 3 The marginal surplus (MS) method
+    def marginal_surplus(self, r=1, z=1, y=1, SD_L1 = 1, SD_L0 = 0):
+        
+        # y, the required return
 
-    def marginal_surplus_Z(self, r = 1 , y = 1, S_1 = 1, S_0 = 0):
-        # print(f'r = {r}')
-        # print(f'S_1 - S_0 = {S_1 - S_0}')
-        # print(f'y / (1+y) = {y / (1+y)}')
-        z = r / (S_1 - S_0) / (y / (1+y) )
-        return z
-
-    def marginal_surplus(self, z = 1 , y = 1, S_1 = 1, S_0 = 0):
-        # print(f'z = {z}')
-        # print(f'S_1 - S_0 = {S_1 - S_0}')
-        # print(f'y / (1+y) = {y / (1+y)}')
-        r = y * z / (1+y) * (S_1 - S_0)
-        return r
+        sol = solve(y * z / (1+y) * (SD_L1 - SD_L0) - r)
+        return sol[0] 
 
     # 4 The marginal variance (MV) method
 
