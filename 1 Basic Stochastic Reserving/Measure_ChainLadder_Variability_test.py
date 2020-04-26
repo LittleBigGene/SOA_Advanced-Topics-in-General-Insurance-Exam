@@ -130,8 +130,31 @@ class test_ChainLadder(unittest.TestCase):
         self.assertAlmostEqual(325979727, venter.adjusted_SSE_AIC(SSE, n, p), 0)
         self.assertAlmostEqual(439338494, venter.adjusted_SSE_BIC(SSE, n, p), 0)
 
-    
+    def test_spring_17_4(self):   
+        rawPaid = [ 20587, 29243, 33208, 35957, 36328, 37131, 37871,
+                    21399, 23109, 30971, 36752, 38103, 38877, 39652,
+                    22259, 31780, 42282, 45157, 48759, 49792, 50784,
+                    23191, 33060, 46113, 48668, 50866, 51944, 52979,
+                    25065, 29536, 38140, 41630, 43510, 44432, 45317,
+                    25024, 40688, 52885, 57724, 60332, 61610, 62838,
+                    25387, 34597, 44968, 49083, 51300, 52387, 53431]                    
+        helper = ChainLadderHelper()
+        paidClaims = helper.convert_2_triangle(rawPaid, 7)
+        paidTriangle = Chain_Ladder(paidClaims)
 
+        #a
+        self.assertAlmostEqual(50.162, paidTriangle.a_proportionality_constant(4),2)
 
+        #b
+        self.assertAlmostEqual(3157, paidTriangle.standard_error(5),0)
+
+        #c d e f) Indicate whether or not this observation provides support for the underlying assumptions of Mack’s model. Justify your response.
+        #c) No, Mack assumes that expected development is a multiple of the previous value. It does not assume that the factor is greater than one.
+        #d) No, Mack makes no assumption about the observed ratios, only about their expected values and variances.
+        #e) The results cannot confirm that the assumptions hold because there may be other tests that would reveal ways in which the assumptions do not hold.
+        #f) The results cannot confirm that the assumptions do not hold. 
+        #   When conducting multiple tests in an environment where the assumptions do hold, 
+        #   it is possible that due to chance a few of the tests may yield an adverse result.
+        
 if __name__ == '__main__':
     unittest.main()
