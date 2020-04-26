@@ -1,5 +1,5 @@
 import unittest
-from LDF_StochasticReserving import Stochastic_Reserving
+from Maximum_Likelihood import Stochastic_Reserving
 
 class test_StochasticReserving(unittest.TestCase):
     def test_spring_19_5(self):
@@ -158,5 +158,47 @@ class test_StochasticReserving(unittest.TestCase):
         #       No, it seems to be increasing. The residuals do not support the model.
         #       Or with the small number of points, a trend is hard to establish.
         
+    def test_spring_17_5(self):
+        #a) State one advantage and one disadvantage of using a parametric distribution function to model loss development.
+        #   Advantages:
+        #   • Provides smoothing
+        #   • Small number of parameters to estimate
+        #   • Does not require equal spacing of data points
+        #   Disadvantage:
+        #   • Development pattern must be increasing
+
+        cumulative_reported = [4000, 6000, 8000,
+                               5000, 7000, 
+                               6000]
+        clark = Stochastic_Reserving()  
+
+        olp = 12000
+        elr = 0.7520
+        clark.θ = 8.858
+
+        #b        
+        G2 = clark.exponential(clark.average_age(2))
+        G3 = clark.exponential(clark.average_age(3))
+        expected_payment_in_2017 = olp*elr*(G3-G2)
+        self.assertAlmostEqual(878, expected_payment_in_2017, 0)
+
+        #c
+        G1 = clark.exponential(clark.average_age(1))
+        est_ult_loss_ay2016 = 6000 + olp * elr * (1 - G1)
+        self.assertAlmostEqual(10584, est_ult_loss_ay2016, 0)
+        
+        σ2 = 813
+
+        #d
+        process_variance = (est_ult_loss_ay2016 - 6000) * σ2 
+        self.assertAlmostEqual(1930,  process_variance **0.5, 0)
+
+        #e
+        self.assertAlmostEqual(2, len(cumulative_reported) - 4)
+        
+        #f) Indicate which of the LDF and Cape Cod methods is likely to have a smaller standard deviation of the total reserve. Justify your response.
+        #   Cape Cod likely has a smaller standard deviation because of the additional information the exposure base provides.
+
+
 if __name__ == '__main__':
     unittest.main()
