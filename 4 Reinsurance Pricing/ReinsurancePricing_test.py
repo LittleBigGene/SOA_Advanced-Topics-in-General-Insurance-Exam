@@ -293,6 +293,35 @@ class test_ReinsurancePricing(unittest.TestCase):
         p = cat.aggregate_loss_probability(loss_size_probability, aggregate_losses_prob, 8)
         self.assertAlmostEqual(.015625, p/2 )
 
-     
+    def test_fall_18_1(self):        
+        tolerant = Reinsurance_Pricing()
+
+        def expected (vector):
+            return sum(vector) / len(vector) / 100
+
+        #a
+        loss_ratio, commission, expense = .65, .10, .15
+        amt_returned = .4
+
+        tech17 = amt_returned * (1 - loss_ratio - commission - expense) + loss_ratio + commission
+        self.assertAlmostEqual(0.79, tech17)
+        
+        #b
+        carryover = 65 - 60
+        lr = [30, 70]
+        comm_min=[10,60]
+        comm_max=[20,40]        
+        tech18 = tolerant.technical_ratio(lr, comm_min, comm_max, sliding=.5, carryforward = carryover) 
+        
+        afterReturnToCeding = expected(tech18) + 11*(35-30)/4000 + 8*(55-35)/4000 + 3*(70-55)/4000 - carryover/100
+
+        self.assertAlmostEqual(0.7028, afterReturnToCeding, 4)
+        
+    def test_CAS8_19_17(self):
+        assert 1 == 1 
+
+    def test_CAS8_14_23(self):
+        assert 1 == 1 
+
 if __name__ == '__main__':
     unittest.main()

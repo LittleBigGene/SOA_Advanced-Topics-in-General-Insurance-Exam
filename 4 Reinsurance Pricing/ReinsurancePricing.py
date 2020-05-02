@@ -17,23 +17,27 @@ class Reinsurance_Pricing:
     # Quota Share, Surplus Share
 
     # 1B a)Slicing Scale Commission      
-    def technical_ratio(self, loss_ratio_range, commission_ratio_min, commission_ratio_max, reassume = 1, sliding = 0):        
+    def technical_ratio(self, loss_ratio_range, commission_ratio_min, commission_ratio_max, reassume = 1, sliding = 0, carryforward = 0, show=False):        
         tech = []        
-        for loss in range(loss_ratio_range[0],loss_ratio_range[1]+1,1):            
+        for loss in range(loss_ratio_range[0]     + carryforward
+                        , loss_ratio_range[1] + 1 + carryforward , 1 ):            
 
             if loss <= commission_ratio_max[1]:
                 comm = commission_ratio_max[0]
             elif loss > commission_ratio_min[1] - sliding:
                 comm = commission_ratio_min[0]                
             else:
-                comm = commission_ratio_min[0] + sliding * (loss - commission_ratio_max[1])
+                comm = commission_ratio_max[0] - sliding * (loss - commission_ratio_max[1])
                 loss = commission_ratio_max[1] + reassume * (loss - commission_ratio_max[1])
+
+            if show:
+                print(f'loss:{loss} comm:{comm}')
 
             tech.append( loss + comm)
         # print(tech)
         # print(sum(tech) / len(tech))
         return tech
-
+    
     # b)Profit Commission
     def profit_commission(self, precentage, loss, margin, annualPrem):
         return max(0, precentage * (annualPrem - margin - loss))
