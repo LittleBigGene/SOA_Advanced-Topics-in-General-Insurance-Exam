@@ -316,7 +316,12 @@ class test_ReinsurancePricing(unittest.TestCase):
         afterReturnToCeding = expected(tech18) + 11*(35-30)/4000 + 8*(55-35)/4000 + 3*(70-55)/4000 - carryover/100
 
         self.assertAlmostEqual(0.7028, afterReturnToCeding, 4)
-        
+
+        #c) Describe two complications with pricing the effect of carryforward provisions.
+        #   • There is no obvious method for reducing the variance of the aggregate distribution.
+        #   • It is difficult to take into account the uncertainty about whether the treaty will be renewed.
+
+
     def test_CAS8_19_17(self):
         assert 1 == 1 
 

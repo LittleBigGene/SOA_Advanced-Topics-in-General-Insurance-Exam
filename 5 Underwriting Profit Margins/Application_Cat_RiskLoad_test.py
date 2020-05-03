@@ -1,5 +1,6 @@
 
 import unittest
+import numpy as np
 from sympy import symbols
 from Application_Cat_RiskLoad import Risk_Load
 
@@ -133,6 +134,37 @@ class test_RiskLoad(unittest.TestCase):
         self.assertAlmostEqual(123-1, x, 0)
         y = account.shapley(sd_y**2, cov_xy, risk_load/var_xy)
         self.assertAlmostEqual(17,y,0)
+
+
+    def test_fall_18_2(self):
+        prob = np.asarray([.9, .05, .03, .02])
+        x = np.asarray([0,500,2000,0])
+        y = np.asarray([0,1000,0,3000])
+        λ = 0.0001
+
+        #a
+        m1 = sum(prob * (x+y))
+        m2 = sum(prob * (x+y)**2)
+        combined_variance = (m2 - m1**2)
+        risk_load = λ*combined_variance
+        self.assertAlmostEqual(37.45, risk_load, 2)
+
+        #b
+        var_x = sum(prob * x**2) - sum(prob * x)**2
+        var_y = sum(prob * y**2) - sum(prob * y)**2
+
+        renewal_risk_load_x = risk_load - λ*var_y
+        renewal_risk_load_y = risk_load - λ*var_x
+
+        self.assertAlmostEqual(15.66, renewal_risk_load_x,2)
+        self.assertAlmostEqual(24.92, renewal_risk_load_y,2)
+
+        #c
+        account = Risk_Load()
+        covariance = (combined_variance - var_x - var_y) / 2
+
+        self.assertAlmostEqual(14.09, account.shapley(var_x, covariance, λ) ,2)
+        self.assertAlmostEqual(23.36, account.shapley(var_y, covariance, λ), 2)
 
 
 if __name__ == '__main__':
