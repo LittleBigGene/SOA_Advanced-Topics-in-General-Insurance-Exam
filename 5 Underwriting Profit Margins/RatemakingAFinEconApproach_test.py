@@ -66,13 +66,13 @@ class test_RatemakingAFinEconApproach(unittest.TestCase):
         sol = targetModel.Risk_Adjusted_Discount_Technique( 
             premium = p,                    risk_free = 0.01,            
             losses = [0, 70 / 2, 70 / 2],   risk_adj_loss = -0.06,
-            expense = 20,                    uw_pl = 70,
+            expense = 20,                    uw_pl = 0,
             invest_income = [0, (p + 100 - 20), (p + 50 - 20 - 35)],
             tax = 0.4
         )        
 
-        #a       
-        self.assertAlmostEqual(sol, 99.69 + 0.02 , 2)
+        #a        
+        self.assertAlmostEqual(sol, 99.69 - 1.58 , 2)
 
         #b) You are also considering using the Target Total Rate of Return Model. 
         #   You need to decide whether to use statutory surplus or the company’s actual equity to derive the required underwriting profit margin.
@@ -108,7 +108,7 @@ class test_RatemakingAFinEconApproach(unittest.TestCase):
         r = symbols('r')        
         sol = targetModel.Risk_Adjusted_Discount_Technique( 
             premium = p,                  risk_free = 0.0175,            
-            losses = [0, 70 * (1-.35)],   risk_adj_loss = r,
+            losses = [0, 70],   risk_adj_loss = r,
             expense = 26,                 uw_pl = 0,
             invest_income = [ (p + p/2 - 26) ],
             tax = 0.35
@@ -162,6 +162,30 @@ class test_RatemakingAFinEconApproach(unittest.TestCase):
             equity_to_premium = 2
         )
         self.assertAlmostEqual(1.15/100, sol, 4)
+
+    def test_fall_18_3(self):
+        
+        p = symbols('p')        
+
+        targetModel = FinEconRatemaking()        
+        sol = targetModel.Risk_Adjusted_Discount_Technique( 
+            premium = p,        risk_free = 0.02,            
+            losses = [0,80],   risk_adj_loss = -0.02,
+            expense = 20,       uw_pl = 0,
+            invest_income = [0, (50 + p - 20)],
+            tax = 0.2
+        )      
+        #a)
+        self.assertAlmostEqual(101.875 + 0.00275, sol, 5 )
+
+        #b) Describe three criticisms of the Risk Adjusted Discounted Technique as applied to insurance models.
+        #   Commentary on Question: Any three of the following are sufficient for full credit.
+        #   • The risk-free rate may not be the correct rate to use.
+        #   • It is not clear how to set the risk-adjusted rate.
+        #   • It is difficult to allocate equity to policies.
+        #   • It considers only one policy term, not renewal cycles.
+        #   • Actual taxes may not be at the corporate rate.
+        #   • Expenses may depend on the premium rate.
 
 if __name__ == '__main__':
     unittest.main()

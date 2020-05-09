@@ -66,14 +66,14 @@ class Ratemaking_A_FinEcon_Approach:
 
     # 6 Discounted Cash Flow Models Applied to Insurance
 
-    def Risk_Adjusted_Discount_Technique(self, premium, risk_free, losses, risk_adj_loss, expense, uw_pl, invest_income, tax):                
+    def Risk_Adjusted_Discount_Technique(self, premium, risk_free, losses, risk_adj_loss, expense, uw_pl, invest_income, tax, show=False):                
         asset_discount = 1 /(1 + risk_free)
         loss_discount = 1 /( 1 + risk_adj_loss)
 
         #  L  Losses and LAE
         pv_L, n = 0, 0
         for loss in losses:
-            pv_L += loss * loss_discount  ** n
+            pv_L += loss * (1- tax) * loss_discount ** n
             n += 1
 
         #   E   Underwriting Expenses        
@@ -88,10 +88,21 @@ class Ratemaking_A_FinEcon_Approach:
         #  TUW Taxes on Underwriting Profit or Loss
         pv_TUW = (premium - expense) * tax * asset_discount - uw_pl * tax * loss_discount
 
-        #print(f'Premium {premium} \n pv_L {pv_L} \n pv_E {pv_E} \n pv_TUW {pv_TUW} \n pv_TII {pv_TII}')
+        if show:
+            print(f'Premium {premium} \n pv_L {pv_L} \n pv_E {pv_E} \n pv_TUW {pv_TUW} \n pv_TII {pv_TII}')
         # premium =  pv_L + pv_E + pv_TUW + pv_TII                
         sol = solve(pv_L + pv_E + pv_TUW + pv_TII - premium)
         return sol[0] 
+
+        # Criticisms of the Risk Adjusted Discounted Technique as applied to insurance models.
+        
+        #   • The risk-free rate may not be the correct rate to use.
+        #   • It is not clear how to set the risk-adjusted rate.
+        #   • It is difficult to allocate equity to policies.
+        #   • It considers only one policy term, not renewal cycles.
+        #   • Actual taxes may not be at the corporate rate.
+        #   • Expenses may depend on the premium rate.
+    
     # 7 Option Pricing
 
     # 8 Application of Option Pricing Models to Pricing Insurance
