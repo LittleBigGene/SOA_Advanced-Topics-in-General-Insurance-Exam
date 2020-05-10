@@ -2,27 +2,29 @@
 # Measuring the Variability of Chain Ladder Reserve Estimates
 # Thomas Mack 1994
 
+import pandas as pd
+
 class Chain_Ladder:    
     # 1 Introduction and Overview
     def __init__(self, triangle):
         self.Triangle = triangle
         self.Dimension = max(triangle.keys()) // 10
-        
-        self.AgeToAgeFactors , self.AgeToUltimateFactors = [], []        
+        self.AgeToAgeFactors , self.AgeToUltimateFactors = [], []     
+         
+    def calc_AgeToAgeFactors(self):         
 
         for dev in range(1, self.Dimension):
             currTotal, nextTotal = 0, 0           
             for acc in range(1, self.Dimension - dev + 1):
-                currTotal += triangle[ acc * 10 + dev    ]
-                nextTotal += triangle[ acc * 10 + dev + 1]
+                currTotal += self.Triangle[ acc * 10 + dev    ]
+                nextTotal += self.Triangle[ acc * 10 + dev + 1]
         
             self.AgeToAgeFactors.append(nextTotal / currTotal)            
 
         cumulativeFactor = 1
         for ageFactor in reversed(self.AgeToAgeFactors):            
             cumulativeFactor = round(cumulativeFactor * ageFactor, 8)
-            self.AgeToUltimateFactors.insert(0, cumulativeFactor)          
-         
+            self.AgeToUltimateFactors.insert(0, cumulativeFactor)     
 
         # print(f'AgeToAgeFactor {self.AgeToAgeFactors}')            
         # print(f'AgeToUltFactor {self.AgeToUltimateFactors}')
@@ -33,12 +35,20 @@ class Chain_Ladder:
 
     # 3 Analysis of the Age-to-Age Factor Formula: the Key to Measuring the Variability
 
-    #   (1) The expected value is the previous value times a constant that depends only on the development year. 
+    #   Assumptions
+    #   (1) 
+    #       The expected value is the previous value times a constant that depends only on the development year. 
     #       This assumption does not prevent values from decreasing because it only relates to the expected, not the actual value. 
     #       Alternatively, the constant can be less than one, which implies an expected decrease.
-    #   (2) The variance is the previous value times a factor that depends only on the development year. 
+    #   (2) 
+    #       The variance is the previous value times a factor that depends only on the development year. 
+    #       The variance of the claim amount in a given development year is proportional to the claim amount at the end of the previous development year. 
+    #       The constant can depend on the development year, but not on the accident year.
     #       This assumption does not prevent values from decreasing because with variability in outcomes, that could extend to decreasing values.
-    #   (3) Values from different accident years are independent. 
+    #   (3) 
+    #       The development in any given accident year is independent of the development in any other accident year.
+    #       Values from different accident years are independent. 
+    #       AYs are independent 
     #       This assumption makes no statement about the magnitude of the values and so allows for decreasing values.
 
 
@@ -117,6 +127,39 @@ class Chain_Ladder:
     # Appendix E: Unbiasedness of the Estimator a^2_k
     # Appendix F: The Standard Error of the Overall Reserve Estimate
     # Appendix G: Testing for Correlations between Subsequent Development Factors
+
+    def spearman_rank(self, show=False):
+        I = self.Dimension + 1
+        self.Tk = []
+        self.Wk = []
+        for dev_k in range(2, self.Dimension):
+            prev_a2a_factors = []           
+            curr_a2a_factors = []  
+
+            for acc in range(1, self.Dimension - dev_k + 2):
+                prev_a2a_factors.append( self.Triangle[ acc * 10 + dev_k - 1] )
+                curr_a2a_factors.append( self.Triangle[ acc * 10 + dev_k] )
+            
+            rank_prev = pd.Series(prev_a2a_factors).rank()
+            rank_curr = pd.Series(curr_a2a_factors).rank()
+
+            squared_diff = (rank_curr - rank_prev) ** 2 
+            S = squared_diff.sum()
+
+            n = I-dev_k
+            t = 1 - 6*S / ( n**3 - n)
+
+            self.Tk.append( t )
+            self.Wk.append(I - dev_k - 1)
+
+            if show:
+                print( rank_curr )
+                print(f'sum of squared diff = {S} T = {t}')  
+        
+        self.T = (pd.Series(self.Tk) * pd.Series(self.Wk)).sum() / pd.Series(self.Wk).sum()
+
+        self.Var_T =  1 / ( (I- 2) * (I-3) / 2 )
+
     # Appendix H: Testing for Calendar Year Effects
 
 

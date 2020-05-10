@@ -1,3 +1,4 @@
+import pandas as pd
 import unittest
 from Measure_ChainLadder_Variability import Chain_Ladder
 from Venter_Factors import Venter_Factors, ChainLadderHelper
@@ -10,7 +11,8 @@ class test_ChainLadder(unittest.TestCase):
                        41:14000 }
         
         paidTriangle = Chain_Ladder(paidClaims)
-        
+        paidTriangle.calc_AgeToAgeFactors()       
+
         #a
         self.assertAlmostEqual(0.46620, paidTriangle.natural_starting_values(1),5)
         self.assertAlmostEqual(0.23310, paidTriangle.natural_starting_values(2),5)
@@ -37,6 +39,7 @@ class test_ChainLadder(unittest.TestCase):
                        71:16100 }
 
         paidTriangle = Chain_Ladder(paidClaims)
+        paidTriangle.calc_AgeToAgeFactors()  
 
         # a
         self.assertAlmostEqual(0.0305, paidTriangle.a_proportionality_constant(5), 4)       
@@ -65,6 +68,8 @@ class test_ChainLadder(unittest.TestCase):
                        71:17360}
 
         paidTriangle = Chain_Ladder(paidClaims)
+        paidTriangle.calc_AgeToAgeFactors()               
+        
         #a
         self.assertAlmostEqual(37.514, paidTriangle.a_proportionality_constant(4), 3)
 
@@ -85,7 +90,7 @@ class test_ChainLadder(unittest.TestCase):
         self.assertAlmostEqual(223735552, venter.adjusted_SSE_AIC(SSE, n, p), 0)
         self.assertAlmostEqual(301539122, venter.adjusted_SSE_BIC(SSE, n, p), 0)
 
-        #f) Venter proposes investigating models other than the standard chain ladder 
+        # f) Venter proposes investigating models other than the standard chain ladder 
         #   (where each value is multiplied by a factor that depends only on the development year).
         #   Describe one such alternative model, using words, not formulas.
 
@@ -101,6 +106,7 @@ class test_ChainLadder(unittest.TestCase):
         helper = ChainLadderHelper()
         paidClaims = helper.convert_2_triangle(rawPaid, 7)
         paidTriangle = Chain_Ladder(paidClaims)
+        paidTriangle.calc_AgeToAgeFactors()  
 
         #a
         self.assertAlmostEqual(1761, paidTriangle.standard_error(4), 0)
@@ -141,6 +147,7 @@ class test_ChainLadder(unittest.TestCase):
         helper = ChainLadderHelper()
         paidClaims = helper.convert_2_triangle(rawPaid, 7)
         paidTriangle = Chain_Ladder(paidClaims)
+        paidTriangle.calc_AgeToAgeFactors()  
 
         #a
         self.assertAlmostEqual(50.162, paidTriangle.a_proportionality_constant(4),2)
@@ -156,5 +163,41 @@ class test_ChainLadder(unittest.TestCase):
         #   When conducting multiple tests in an environment where the assumptions do hold, 
         #   it is possible that due to chance a few of the tests may yield an adverse result.
         
+    def test_fall_18_4(self):
+        #a,b) Mack's three assumptions
+        
+        age_to_age_factors = {11: 1.3313, 12: 1.4512, 13: 1.0496, 14: 0.9775, 15: 1.0215, 16:1.0200,
+                              21: 1.4678, 22: 1.3133, 23: 1.1159, 24: 0.9821, 25: 1.0211,
+                              31: 1.3140, 32: 1.3046, 33: 1.1160, 34: 0.9065,
+                              41: 1.5574, 42: 2.0168, 43: 1.1004,
+                              51: 1.4623, 52: 1.2069,
+                              61: 1.1017}
+        
+        target = Chain_Ladder(age_to_age_factors)
+        target.spearman_rank()        
+
+        self.assertAlmostEqual(-.24, target.T)
+
+        self.assertAlmostEqual(-0.76, target.T / target.Var_T**0.5, 2)
+
+    def test_CAS7_spring_18_7(self):
+        # variance assumptions
+        assert 1 == 1
+
+    def test_CAS7_spring_18_8(self):
+        age_to_age_factors = {11: 1.7, 12: 1.35, 13: 1.10, 14: 1.05,
+                              21: 2.5, 22: 1.55, 23: 1.08,
+                              31: 2.0, 32: 1.40,
+                              41: 1.8}
+                              
+        target = Chain_Ladder(age_to_age_factors)
+        target.spearman_rank()    
+
+        self.assertAlmostEqual(0.3333, target.T, 4)
+        
+        self.assertAlmostEqual(0.3333, target.Var_T,4)
+
+
+
 if __name__ == '__main__':
     unittest.main()
