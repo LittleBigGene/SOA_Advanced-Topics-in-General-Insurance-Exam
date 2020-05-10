@@ -1,3 +1,4 @@
+import pandas as pd
 import unittest
 from Maximum_Likelihood import Stochastic_Reserving
 
@@ -199,6 +200,47 @@ class test_StochasticReserving(unittest.TestCase):
         #f) Indicate which of the LDF and Cape Cod methods is likely to have a smaller standard deviation of the total reserve. Justify your response.
         #   Cape Cod likely has a smaller standard deviation because of the additional information the exposure base provides.
 
+    def test_fall_18_5(self):
+
+        cumulative_reported = [6000, 5900, 6200,
+                               4000, 5500, 
+                               3000]
+        clark = Stochastic_Reserving()  
+
+        olp = [10000, 8500, 9000]
+
+        clark.θ = 1.8968
+        clark.ω = 1.0300
+
+        #b        
+        G3 = clark.loglogistic(clark.average_age(3) - 3 )
+        G2 = clark.loglogistic(clark.average_age(2) - 3 )
+        G1 = clark.loglogistic(clark.average_age( 9/12 ) )
+        
+        self.assertAlmostEqual(0.9391, G3,4)
+        self.assertAlmostEqual(0.8938, G2,4)
+        self.assertAlmostEqual(0.7089, G1,4)
+
+        elr = (6200 + 5500 + 3000) / (pd.Series(olp) * pd.Series([G3,G2,G1])).sum()
+        self.assertAlmostEqual(0.6291, elr, 4 )
+
+        #c
+        reserve = ( 
+            pd.Series(olp) * elr * (1 - pd.Series([G3,G2,G1]))
+        ).sum()
+        self.assertAlmostEqual(2599.6, reserve, 1)
+
+        #d
+        g = clark.loglogistic(18) - clark.loglogistic(15) 
+        est = 8500 * elr * g
+        self.assertAlmostEqual(88.5, est, 1)
+
+        #e) Describe a situation where the Weibull is likely to be more appropriate.
+        # The Weibull distribution generally provides a smaller tail factor than the loglogistic.
+
+        #f) Explain why Mack’s formulas are not appropriate in this situation.
+        # Mack assumes that for each development age the expected value and variance are a constant multiple of past values with constant independent of accident year. 
+        # 3This situation has different development ages by accident year and hence different factors are required.
 
 if __name__ == '__main__':
     unittest.main()

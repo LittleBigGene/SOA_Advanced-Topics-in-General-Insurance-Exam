@@ -59,6 +59,6 @@ class Stochastic_Reserving:
     #   Calculate the average accident date of the period that is earned
     def average_age(self, year):
         if year <= 1:
-            return 6
+            return year*12/2
         else:
             return self.average_age(year - 1) + 12
