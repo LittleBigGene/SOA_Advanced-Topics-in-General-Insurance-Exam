@@ -68,6 +68,9 @@ class test_AssessingRiskMargins(unittest.TestCase):
     def test_spring_17_2(self):
         pass
 
+    def test_fall_18_6(self):
+        pass
+
 
 if __name__ == '__main__':
     unittest.main()

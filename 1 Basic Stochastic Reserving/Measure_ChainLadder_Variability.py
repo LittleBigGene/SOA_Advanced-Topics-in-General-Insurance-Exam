@@ -153,7 +153,12 @@ class Chain_Ladder:
             self.Wk.append(I - dev_k - 1)
 
             if show:
+                print( "rank_prev" )
+                print( rank_prev )
+
+                print( "rank_curr" )
                 print( rank_curr )
+                
                 print(f'sum of squared diff = {S} T = {t}')  
         
         self.T = (pd.Series(self.Tk) * pd.Series(self.Wk)).sum() / pd.Series(self.Wk).sum()
