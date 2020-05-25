@@ -20,7 +20,7 @@ class Excess_Loss_and_Retro_Rating:
         self.ExcessAmounts = []    
         self.Trend = 0
         self.TrendFactors = []
-        self.Table_M_Loss_Ratios = []
+        self.Loss_Ratios = []
     
     def set_losses_probabilities(self, losses, probabilities):        
         self.TrendFactors = []
@@ -39,27 +39,51 @@ class Excess_Loss_and_Retro_Rating:
     # 4 Retrospective Rating
     # Table M charge: The average amount by which a risk’s actual loss exceeds r times its expected loss, divided by its expected loss
     def Φ(self, r):
-        avg_loss_ratio = sum(self.Table_M_Loss_Ratios) / len(self.Table_M_Loss_Ratios)
+        avg_loss_ratio = sum(self.Loss_Ratios) / len(self.Loss_Ratios)
         expected_excess = r * avg_loss_ratio
 
         excess = 0
-        for loss in self.Table_M_Loss_Ratios:
+        for loss in self.Loss_Ratios:
             if loss > expected_excess:
                 excess += loss - expected_excess
             
-        return excess / len(self.Table_M_Loss_Ratios) / avg_loss_ratio
+        return excess / len(self.Loss_Ratios) / avg_loss_ratio
 
     # Table M saving: The average amount by which a risk’s actual loss falls short of r times its expected loss, divided by its expected loss
     def Ψ(self, r):
-        avg_loss_ratio = sum(self.Table_M_Loss_Ratios) / len(self.Table_M_Loss_Ratios)
+        avg_loss_ratio = sum(self.Loss_Ratios) / len(self.Loss_Ratios)
         expected_excess = r * avg_loss_ratio
 
         saving = 0
-        for loss in self.Table_M_Loss_Ratios:
+        for loss in self.Loss_Ratios:
             if loss < expected_excess:
                 saving += expected_excess - loss
             
-        return saving / len(self.Table_M_Loss_Ratios) / avg_loss_ratio
+        return saving / len(self.Loss_Ratios) / avg_loss_ratio
+
+    # Table L charge: The average amount by which a risk’s actual limited loss exceeds r times its expected loss, divided by its expected loss
+    def Φ_Limited(self, r, loss_elimination_ratio):
+        avg_loss_ratio = sum(self.Loss_Ratios) / len(self.Loss_Ratios) / (1 - loss_elimination_ratio  )
+        expected_excess = r * avg_loss_ratio
+
+        excess = 0
+        for loss in self.Loss_Ratios:
+            if loss > expected_excess:
+                excess += loss - expected_excess
+            
+        return excess / len(self.Loss_Ratios) / avg_loss_ratio + loss_elimination_ratio
+
+    # Table L saving: The average amount by which a risk’s actual limited loss falls short of r times its expected loss, divided by its expected loss
+    def Ψ_Limited(self, r, loss_elimination_ratio):
+        avg_loss_ratio = sum(self.Loss_Ratios) / len(self.Loss_Ratios)/ (1 - loss_elimination_ratio  )
+        expected_excess = r * avg_loss_ratio
+
+        saving = 0
+        for loss in self.Loss_Ratios:
+            if loss < expected_excess:
+                saving += expected_excess - loss
+            
+        return saving / len(self.Loss_Ratios) / avg_loss_ratio 
 
     
     def retro_rating(self):

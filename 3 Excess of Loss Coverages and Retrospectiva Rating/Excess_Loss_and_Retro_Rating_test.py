@@ -29,7 +29,7 @@ class test_ExcessLossCoverageAndRetroRating(unittest.TestCase):
         #a) define Table M in a retro rating plan
 
         #b
-        retro.Table_M_Loss_Ratios = [.3,.4,.5,.6,.7]
+        retro.Loss_Ratios = [.3,.4,.5,.6,.7]
 
         r = 0
         self.assertAlmostEqual(1,retro.Φ(r))
@@ -68,5 +68,23 @@ class test_ExcessLossCoverageAndRetroRating(unittest.TestCase):
         # d) I = E [φ(r_G) - ψ(r_H)]
         pass
     
+    def test_fall_18_7(self):
+        retro = Excess_Loss_and_Retro_Rating()
+
+        #a) define Table L in a retro rating plan
+
+        #b
+        retro.Loss_Ratios = [.2, .3, .4, .5, .6]
+
+        r = 0.6
+        self.assertAlmostEqual(0.44,retro.Φ_Limited(r, 0.2))
+        self.assertAlmostEqual(0.04,retro.Ψ_Limited(r, 0.2))
+
+        r = 0.8
+        self.assertAlmostEqual(0.32,retro.Φ_Limited(r, 0.2))
+        self.assertAlmostEqual(0.12,retro.Ψ_Limited(r, 0.2))
+       
+
+
 if __name__ == '__main__':
     unittest.main()
