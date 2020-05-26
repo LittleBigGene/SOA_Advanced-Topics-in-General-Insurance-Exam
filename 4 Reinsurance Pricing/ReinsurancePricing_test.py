@@ -328,5 +328,17 @@ class test_ReinsurancePricing(unittest.TestCase):
     def test_CAS8_14_23(self):
         assert 1 == 1 
 
+
+    def test_fall_18_8(self):
+        #a trend and ultimate losses
+        #b Define free cover.
+        #   Free cover occurs when no losses trend into the highest portion of the layer covered.
+
+        #c Calculate a suitable adjustemnt to the loss cost using those expsore factors to estiamte the cost of free cover
+
+        #d  Using these exposure factors would imply that the factors are scale invariant. 
+        #   This is reasonable for homeowners insurance, but not for commercial property.
+        pass
+
 if __name__ == '__main__':
     unittest.main()
