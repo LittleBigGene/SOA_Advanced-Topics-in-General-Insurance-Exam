@@ -39,8 +39,8 @@ class Reinsurance_Pricing:
         return tech
     
     # b)Profit Commission
-    def profit_commission(self, precentage, loss, margin, annualPrem):
-        return max(0, precentage * (annualPrem - margin - loss))
+    def profit_commission(self, percentage, loss, margin, annualPrem):
+        return max(0, percentage * (annualPrem - margin - loss))
 
     # c)Loss Corridors
     # The ceding company reassumes a portion of the liability if the loss ratio exceeds a certain amount.
@@ -161,8 +161,8 @@ class Reinsurance_Pricing:
     # That is, other reinsurance inures to the benefit of the catastrophe cover.
     
     # 5B. Alternative Risk Products
-    def additional_prem(self, precentage, loss, margin, annualPrem ):
-        return max(0, precentage * (loss + margin - annualPrem))
+    def additional_prem(self, percentage, loss, margin, annualPrem ):
+        return max(0, percentage * (loss + margin - annualPrem))
 
     # 6. Calculating the Final Price
 

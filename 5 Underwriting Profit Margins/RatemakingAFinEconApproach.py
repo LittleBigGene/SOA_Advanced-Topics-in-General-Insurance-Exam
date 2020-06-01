@@ -103,8 +103,8 @@ class Ratemaking_A_FinEcon_Approach:
         #   • Actual taxes may not be at the corporate rate.
         #   • Expenses may depend on the premium rate.
     
+    # Syllabbi Excluds Section 7 & 8
     # 7 Option Pricing
-
     # 8 Application of Option Pricing Models to Pricing Insurance
 
     # 9 Conclusion
