@@ -12,7 +12,8 @@ class Reinsurance_Pricing:
         self.ILF = {}
         self.mean = 0
         self.variance = 0
-
+        self.AP = 0
+        self.Limit = 0
     # 1. Proportional Treaties
     # Quota Share, Surplus Share
 
@@ -84,26 +85,25 @@ class Reinsurance_Pricing:
 
 
     # b) Exposure Rating
-    def occurrence_exposure_rating(self, underlyingLimit, policyLimit, excessAmt, ϕ = 0 , show = False):
+    def occurrence_exposure_rating(self, underlyingLimit, policyLimit, ϕ = 0 , show = False):
+        ul         = self.ILF[underlyingLimit]
+        ul_pl      = self.ILF[underlyingLimit + policyLimit]        
+        ul_ap      = self.ILF[underlyingLimit + self.AP ]
+        ul_ap_lim  = self.ILF[underlyingLimit + self.AP + self.Limit  ]
 
-        UL_plus_PL      = self.ILF[underlyingLimit + policyLimit]
-        UL_plus_Excess  = self.ILF[underlyingLimit + excessAmt  ]
-        UL              = self.ILF[underlyingLimit              ]
-        PL              = self.ILF[policyLimit                  ]
+        reinsurance = (min(ul_pl,ul_ap_lim) - min(ul_pl,ul_ap)) * (1-ϕ)
+        underlying  = (ul_pl - ul) * (1-ϕ)
 
-        reinsurance = (UL_plus_PL - UL_plus_Excess) * (1-ϕ)
-        underlying  = (UL_plus_PL - UL) * (1-ϕ)
-
+        pl = self.ILF[policyLimit]     
         UL_less_Excess = 0
         if ϕ > 0 :
-            UL_less_Excess = self.ILF[underlyingLimit - excessAmt]
-            
-            reinsurance += (UL - UL_less_Excess) * ϕ
-            underlying  += (PL - 0             ) * ϕ
+            UL_less_Excess = self.ILF[underlyingLimit - self.AP]
+            reinsurance += (ul - UL_less_Excess) * ϕ
+            underlying  += (pl - 0             ) * ϕ
 
         if show:
-            print(f'({UL_plus_PL}-{UL_plus_Excess})({1-ϕ}) + ({UL} - {UL_less_Excess})({ϕ})')
-            print(f'over ({UL_plus_PL}-{UL})({1-ϕ}) + ({PL} - {0})({ϕ})')
+            print(f'({min(ul_pl,ul_ap_lim)}-{min(ul_pl,ul_ap)})({1-ϕ}) + ({ul} - {UL_less_Excess})({ϕ})')
+            print(f'over ({ul_pl}-{ul})({1-ϕ}) + ({pl} - {0})({ϕ})')
         return  reinsurance / underlying
     
 

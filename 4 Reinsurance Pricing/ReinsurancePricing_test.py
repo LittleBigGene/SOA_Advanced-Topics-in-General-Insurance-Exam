@@ -8,21 +8,23 @@ class test_ReinsurancePricing(unittest.TestCase):
     def test_spring_19_2(self):        
         ExpectedLoss = Reinsurance_Pricing()
         ExpectedLoss.ILF = {0:0, 1:1, 2:1.16 , 3:1.28 , 4:1.38 }
-        
+        ExpectedLoss.AP = 1
+        ExpectedLoss.Limit = 2
+
         #a
-        a1 = ExpectedLoss.occurrence_exposure_rating(0, 1, 1)
+        a1 = ExpectedLoss.occurrence_exposure_rating(0, 1)
         self.assertAlmostEqual(a1, 0)
 
-        a2 = ExpectedLoss.occurrence_exposure_rating(0, 2, 1)
+        a2 = ExpectedLoss.occurrence_exposure_rating(0, 2)
         self.assertAlmostEqual( a2, 0.138, 3)
 
-        a3 = ExpectedLoss.occurrence_exposure_rating(0, 3, 1)
+        a3 = ExpectedLoss.occurrence_exposure_rating(0, 3)
         self.assertAlmostEqual( a3, 0.219, 3)
 
-        a4 = ExpectedLoss.occurrence_exposure_rating(1, 2, 1)
+        a4 = ExpectedLoss.occurrence_exposure_rating(1, 2)
         self.assertAlmostEqual( a4, 0.429, 3)
         
-        a5 = ExpectedLoss.occurrence_exposure_rating(1, 3, 1)
+        a5 = ExpectedLoss.occurrence_exposure_rating(1, 3)
         self.assertAlmostEqual(a5, 0.579, 3)
 
         a = .6*(3 * a1 + 4 * a2 + 5 * a3 + 8 * a4 + 9 * a5)
@@ -186,14 +188,17 @@ class test_ReinsurancePricing(unittest.TestCase):
                             2500:2.10,
                             3000:2.15}
 
+        ExpectedLoss.AP = 500
+        ExpectedLoss.Limit = 500
+
         #b
-        b1 = ExpectedLoss.occurrence_exposure_rating(1000, 1000, 500, 0.1)
-        b2 = ExpectedLoss.occurrence_exposure_rating(1000, 2000, 500, 0.1)
+        b1 = ExpectedLoss.occurrence_exposure_rating(1000, 1000, 0.1)
+        b2 = ExpectedLoss.occurrence_exposure_rating(1000, 2000, 0.1)
 
         self.assertAlmostEqual(460 / 1200, b1)
-        self.assertAlmostEqual(365 / 785 , b2)
+        self.assertAlmostEqual(230 / 785 , b2)
 
-        total_expeced_loss = .6 * (460 + 365) 
+        total_expeced_loss = .6 * (460 + 230) 
         #print(total_expeced_loss)
 
         #c) clash over
