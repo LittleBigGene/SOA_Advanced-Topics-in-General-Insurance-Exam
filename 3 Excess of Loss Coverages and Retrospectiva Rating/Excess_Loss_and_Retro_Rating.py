@@ -86,7 +86,7 @@ class Excess_Loss_and_Retro_Rating:
         return saving / len(self.Loss_Ratios) / avg_loss_ratio 
 
     
-    def retro_rating(self):
+    def workers_compensation_retro_rating(self):
         b = symbols('basic premium')        
         B = symbols('basic premium ratio')
         P = symbols('premium')

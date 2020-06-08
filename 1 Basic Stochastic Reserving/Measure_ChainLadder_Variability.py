@@ -66,6 +66,7 @@ class Chain_Ladder:
         if (self.Dimension - a - 1) > 0:
             return meanSquareError / (self.Dimension - a - 1)
         else:
+            # by means of loglinear regression: a3 / a2 = a2 / a1
             a_less_1 = self.a_proportionality_constant(a-1)
             a_less_2 = self.a_proportionality_constant(a-2)
             return  a_less_1 ** 2 / a_less_2             
