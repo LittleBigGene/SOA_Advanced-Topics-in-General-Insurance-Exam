@@ -17,6 +17,12 @@ class Reinsurance_Pricing:
     # 1. Proportional Treaties
     # Quota Share, Surplus Share
 
+    def surplus_share(self, insuredValue, loss, retained, limit):
+        surplus = (insuredValue - retained).clip(0, limit)
+        cededPct = surplus / insuredValue
+        cededLoss = cededPct * loss
+        return cededLoss
+
     # 1B a)Slicing Scale Commission      
     def technical_ratio(self, loss_ratio_range, commission_ratio_min, commission_ratio_max, reassume = 1, sliding = 0, carryforward = 0, show=False):        
         tech = []        
@@ -160,6 +166,8 @@ class Reinsurance_Pricing:
     # 5A. Traditional Products and Methods
     # That is, other reinsurance inures to the benefit of the catastrophe cover.
     
+
+
     # 5B. Alternative Risk Products
     def additional_prem(self, percentage, loss, margin, annualPrem ):
         return max(0, percentage * (loss + margin - annualPrem))

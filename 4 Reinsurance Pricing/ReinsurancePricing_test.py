@@ -345,5 +345,25 @@ class test_ReinsurancePricing(unittest.TestCase):
         #   This is reasonable for homeowners insurance, but not for commercial property.
         pass
 
+    def test_spring_18_2(self):
+        pricing = Reinsurance_Pricing()
+        insuredValue = pd.Series(data=[2000,20000,8000,12500,4000])
+        loss =  pd.Series(data=[400,16000,3200,12500,1200])
+
+        surplusCededLoss = pricing.surplus_share(insuredValue, loss, 2000, 2000*5)
+        surplusRetainedLoss = loss - surplusCededLoss
+
+        xsCession = (surplusRetainedLoss - 1000).clip(0,4000)        
+        xsRetained = surplusRetainedLoss - xsCession        
+
+        assert surplusCededLoss.sum() == 21000
+        assert xsCession.sum() == 5500
+
+
+
+
+
 if __name__ == '__main__':
     unittest.main()
+
+    
