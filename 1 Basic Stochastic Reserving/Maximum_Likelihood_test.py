@@ -242,5 +242,28 @@ class test_StochasticReserving(unittest.TestCase):
         # Mack assumes that for each development age the expected value and variance are a constant multiple of past values with constant independent of accident year. 
         # 3This situation has different development ages by accident year and hence different factors are required.
 
+    def test_spring_18_6(self):
+        clark = Stochastic_Reserving()  
+        olp = [10000, 8500, 12000]
+        clark.θ = 6.689
+
+        #a) example where assumption might not hold
+
+        #b) explan why variance estimates are an approximation
+
+        #c) caluclate MLE of ELR
+        G3 = clark.exponential(clark.average_age(3) )
+        G2 = clark.exponential(clark.average_age(2) )
+        G1 = clark.exponential(clark.average_age(1) )
+
+        reserve = 4369
+        ibnr = olp[0]*(1-G3) + olp[1]*(1-G2) + olp[2]*(1-G1)
+        self.assertAlmostEqual(0.7826, reserve/ibnr, 4)
+     
+        #d) expected payment in 2018 for AY2017
+        ay17_payment = olp[2] * reserve/ibnr
+        self.assertAlmostEqual(3193, ay17_payment * (G2-G1), 0)
+
+
 if __name__ == '__main__':
     unittest.main()

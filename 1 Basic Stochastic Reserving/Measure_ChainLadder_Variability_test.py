@@ -197,7 +197,25 @@ class test_ChainLadder(unittest.TestCase):
         
         self.assertAlmostEqual(0.3333, target.Var_T,4)
 
+    def test_spring_18_5(self):
+        paidClaims = { 11: 9146, 12:12176, 13:17670, 14:18546, 15:18128, 16:18517, 17:18888,
+                       21:10834, 22:15902, 23:20884, 24:23304, 25:22887, 26:23371, 
+                       31:11946, 32:15697, 33:20478, 34:22854, 35:20718,
+                       41:12414, 42:19333, 43:38991, 44:42905,
+                       51:14284, 52:20888, 53:25210, 
+                       61:15648, 62:17240,
+                       71:17221}
 
+        paidTriangle = Chain_Ladder(paidClaims)
+        paidTriangle.calc_AgeToAgeFactors()       
+
+        #a
+        self.assertAlmostEqual(40.0504, paidTriangle.a_proportionality_constant(4),4)
+
+        self.assertAlmostEqual(1761, paidTriangle.standard_error(4), 0)
+        self.assertAlmostEqual(1514, paidTriangle.standard_error(5), 0)
+
+        print(sum(paidTriangle.AgeToAgeFactors) / 6)
 
 if __name__ == '__main__':
     unittest.main()
