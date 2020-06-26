@@ -66,14 +66,14 @@ class Ratemaking_A_FinEcon_Approach:
 
     # 6 Discounted Cash Flow Models Applied to Insurance
 
-    def Risk_Adjusted_Discount_Technique(self, premium, risk_free, losses, risk_adj_loss, expense, uw_pl, invest_income, tax, show=False):                
+    def Risk_Adjusted_Discount_Technique(self, premium, risk_free, losses, risk_adj_loss, expense, uw_loss, invest_income, tax, show=False):                
         asset_discount = 1 /(1 + risk_free)
         loss_discount = 1 /( 1 + risk_adj_loss)
 
         #  L  Losses and LAE
         pv_L, n = 0, 0
         for loss in losses:
-            pv_L += loss * (1- tax) * loss_discount ** n
+            pv_L += loss * loss_discount ** n
             n += 1
 
         #   E   Underwriting Expenses        
@@ -86,7 +86,7 @@ class Ratemaking_A_FinEcon_Approach:
             n += 1
         
         #  TUW Taxes on Underwriting Profit or Loss
-        pv_TUW = (premium - expense) * tax * asset_discount - uw_pl * tax * loss_discount
+        pv_TUW = (premium - expense) * tax * asset_discount + uw_loss * tax * loss_discount
 
         if show:
             print(f'Premium {premium} \n pv_L {pv_L} \n pv_E {pv_E} \n pv_TUW {pv_TUW} \n pv_TII {pv_TII}')
