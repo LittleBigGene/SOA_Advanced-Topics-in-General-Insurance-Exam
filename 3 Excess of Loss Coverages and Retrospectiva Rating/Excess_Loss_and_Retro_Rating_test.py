@@ -1,4 +1,5 @@
 import unittest
+import numpy as np
 from Excess_Loss_and_Retro_Rating import Excess_Loss_and_Retro_Rating
 
 class test_ExcessLossCoverageAndRetroRating(unittest.TestCase):
@@ -29,7 +30,7 @@ class test_ExcessLossCoverageAndRetroRating(unittest.TestCase):
         #a) define Table M in a retro rating plan
 
         #b
-        retro.Loss_Ratios = [.3,.4,.5,.6,.7]
+        retro.Loss_Ratios = np.array([.3,.4,.5,.6,.7])
 
         r = 0
         self.assertAlmostEqual(1,retro.Φ(r))
@@ -43,6 +44,10 @@ class test_ExcessLossCoverageAndRetroRating(unittest.TestCase):
         self.assertAlmostEqual(0.24, retro.Φ(r))
         self.assertAlmostEqual(0.04, retro.Ψ(r))
         
+        r = 1
+        self.assertAlmostEqual(0.12, retro.Φ(r))
+        self.assertAlmostEqual(0.12, retro.Ψ(r))
+                
         r = 1.2 
         self.assertAlmostEqual(0.04, retro.Φ(r))
         self.assertAlmostEqual(0.24, retro.Ψ(r))
@@ -74,7 +79,7 @@ class test_ExcessLossCoverageAndRetroRating(unittest.TestCase):
         #a) define Table L in a retro rating plan
 
         #b
-        retro.Loss_Ratios = [.2, .3, .4, .5, .6]
+        retro.Loss_Ratios = np.array([.2, .3, .4, .5, .6])
 
         r = 0.6
         self.assertAlmostEqual(0.44,retro.Φ_Limited(r, 0.2))
