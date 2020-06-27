@@ -3,7 +3,7 @@ import numpy as np
 from Excess_Loss_and_Retro_Rating import Excess_Loss_and_Retro_Rating
 
 class test_ExcessLossCoverageAndRetroRating(unittest.TestCase):
-    def test_spring_19_6(self):
+    def test_19_spring_6(self):
         coverage = Excess_Loss_and_Retro_Rating()
         coverage.Layers = [0,100,200]
         coverage.ExcessAmounts = [100,100,999]
@@ -21,10 +21,12 @@ class test_ExcessLossCoverageAndRetroRating(unittest.TestCase):
         self.assertLess(coverage.TrendFactors[1],coverage.TrendFactors[0])
         self.assertLess(coverage.TrendFactors[0],coverage.TrendFactors[2])
 
-    def test_fall_16_3(self):
+    def test_16_fall_3(self):
+        #intergal (1 - 1/10 * x) from 2 to 10 = 3.2
+        #intergal (1 - 1/15 * x) from 2 to 10 = 4.8
         pass
 
-    def test_spring_16_6(self):
+    def test_16_spring_6(self):
         retro = Excess_Loss_and_Retro_Rating()
 
         #a) define Table M in a retro rating plan
@@ -63,17 +65,17 @@ class test_ExcessLossCoverageAndRetroRating(unittest.TestCase):
         #c) Explain how Table L differs from Table M.
         # Table L incorporates a per accident limit on losses.
 
-    def test_fall_17_7(self):
+    def test_17_fall_7(self):
         pass
 
-    def test_spring_17_7(self):
+    def test_17_spring_7(self):
         # a) b + C(E - I) = e + E
         # b) H = b + C * E * r_H 
         # c) G = b + C * E * r_G 
         # d) I = E [φ(r_G) - ψ(r_H)]
         pass
     
-    def test_fall_18_7(self):
+    def test_18_fall_7(self):
         retro = Excess_Loss_and_Retro_Rating()
 
         #a) define Table L in a retro rating plan

@@ -6,7 +6,7 @@ from Application_Cat_RiskLoad import Risk_Load
 
 class test_RiskLoad(unittest.TestCase):
 
-    def test_spring_19_1(self):        
+    def test_19_spring_1(self):        
         account = Risk_Load()
 
         a = 0.0002 * (account.binomial_variance(0.01, 1000) + account.binomial_variance(0.02, 3000) + account.binomial_variance(0.03, 5000))
@@ -26,7 +26,7 @@ class test_RiskLoad(unittest.TestCase):
         d = account.marginal_surplus(z=symbols('z'), y = 0.15, r = b, SD_L1 = S1, SD_L0 = S0 )
         self.assertAlmostEqual(2.985, d, 3)
 
-    def test_fall_16_6(self):
+    def test_16_fall_6(self):
         account = Risk_Load()
         
         account.var_x = [17640000, 2227500]
@@ -55,7 +55,7 @@ class test_RiskLoad(unittest.TestCase):
         # c) Evaluate which method is more likely to produce appropriate risk loads to be used in pricing.
         # The covariance share method is more appropriate because it allocates less of the covariance to smaller accounts, which should have lower risk.
 
-    def test_spring_16_2(self):
+    def test_16_spring_2(self):
         account = Risk_Load()
 
         account.p = [.01, .02, .03]        
@@ -81,7 +81,7 @@ class test_RiskLoad(unittest.TestCase):
         self.assertAlmostEqual(436681, 25 * (var - varE), 0)        
         self.assertAlmostEqual(226381, 25 * (var - varH), 0)
 
-    def test_fall_17_6(self):
+    def test_17_fall_6(self):
         account = Risk_Load()
         
         account.p = [.01, .02]
@@ -108,7 +108,7 @@ class test_RiskLoad(unittest.TestCase):
         self.assertAlmostEqual(209.04, sol[0])
         self.assertAlmostEqual( 48.24, sol[1])
         
-    def test_spring_17_6(self):
+    def test_17_spring_6(self):
         account = Risk_Load()
 
         sd_x = 0.3 * 2000
@@ -136,7 +136,7 @@ class test_RiskLoad(unittest.TestCase):
         self.assertAlmostEqual(17,y,0)
 
 
-    def test_fall_18_2(self):
+    def test_18_fall_2(self):
         prob = np.asarray([.9, .05, .03, .02])
         x = np.asarray([0,500,2000,0])
         y = np.asarray([0,1000,0,3000])

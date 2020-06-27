@@ -4,7 +4,7 @@ from Measure_ChainLadder_Variability import Chain_Ladder
 from Venter_Factors import Venter_Factors, ChainLadderHelper
 
 class test_ChainLadder(unittest.TestCase):
-    def test_spring_19_4(self):
+    def test_19_spring_4(self):
         paidClaims = { 11: 8000, 12:15000, 13:21000, 14:23100,
                        21:10000, 22:15000, 23:18000,
                        31:12000, 32:15000,
@@ -29,7 +29,7 @@ class test_ChainLadder(unittest.TestCase):
         self.assertAlmostEqual(300, paidTriangle.a_proportionality_constant(2),0)
         self.assertAlmostEqual(96, paidTriangle.a_proportionality_constant(3),0)
 
-    def test_fall_16_4(self):
+    def test_16_fall_4(self):
         paidClaims = { 11: 9659, 12:15468, 13:17887, 14:18236, 15:18910, 16:19262, 17:19644,
                        21:10731, 22:17668, 23:22333, 24:24701, 25:24827, 26:25331,
                        31:11715, 32:11037, 33:14503, 34:14707, 35:16414,                                        
@@ -58,7 +58,7 @@ class test_ChainLadder(unittest.TestCase):
         # e) why weighted regression
         # f) Venter
 
-    def test_spring_16_4(self):
+    def test_16_spring_4(self):
         paidClaims = { 11: 9791, 12:12431, 13:13033, 14:14212, 15:14486, 16:14867, 17:15155,
                        21:11314, 22:19266, 23:23518, 24:27910, 25:28117, 26:28697,
                        31:12654, 32:14924, 33:18489, 34:22433, 35:24281,
@@ -94,7 +94,7 @@ class test_ChainLadder(unittest.TestCase):
         #   (where each value is multiplied by a factor that depends only on the development year).
         #   Describe one such alternative model, using words, not formulas.
 
-    def test_fall_17_4(self):        
+    def test_17_fall_4(self):        
         rawPaid = [9146,12176,17670,18546,18128,18517,18888,
                   10834,15902,20884,23304,22887,23371,23839,
                   11946,15697,20478,22854,20718,21159,21583,
@@ -136,7 +136,7 @@ class test_ChainLadder(unittest.TestCase):
         self.assertAlmostEqual(325979727, venter.adjusted_SSE_AIC(SSE, n, p), 0)
         self.assertAlmostEqual(439338494, venter.adjusted_SSE_BIC(SSE, n, p), 0)
 
-    def test_spring_17_4(self):   
+    def test_17_spring_4(self):   
         rawPaid = [ 20587, 29243, 33208, 35957, 36328, 37131, 37871,
                     21399, 23109, 30971, 36752, 38103, 38877, 39652,
                     22259, 31780, 42282, 45157, 48759, 49792, 50784,
@@ -163,7 +163,7 @@ class test_ChainLadder(unittest.TestCase):
         #   When conducting multiple tests in an environment where the assumptions do hold, 
         #   it is possible that due to chance a few of the tests may yield an adverse result.
         
-    def test_fall_18_4(self):
+    def test_18_fall_4(self):
         #a,b) Mack's three assumptions
         
         age_to_age_factors = {11: 1.3313, 12: 1.4512, 13: 1.0496, 14: 0.9775, 15: 1.0215, 16:1.0200,
@@ -180,11 +180,11 @@ class test_ChainLadder(unittest.TestCase):
 
         self.assertAlmostEqual(-0.76, target.T / target.Var_T**0.5, 2)
 
-    def test_CAS7_spring_18_7(self):
+    def test_CAS7_18_spring_7(self):
         # variance assumptions
         assert 1 == 1
 
-    def test_CAS7_spring_18_8(self):
+    def test_CAS7_18_spring_8(self):
         age_to_age_factors = {11: 1.7, 12: 1.35, 13: 1.10, 14: 1.05,
                               21: 2.5, 22: 1.55, 23: 1.08,
                               31: 2.0, 32: 1.40,
@@ -197,7 +197,7 @@ class test_ChainLadder(unittest.TestCase):
         
         self.assertAlmostEqual(0.3333, target.Var_T,4)
 
-    def test_spring_18_5(self):
+    def test_18_spring_5(self):
         paidClaims = { 11: 9146, 12:12176, 13:17670, 14:18546, 15:18128, 16:18517, 17:18888,
                        21:10834, 22:15902, 23:20884, 24:23304, 25:22887, 26:23371, 
                        31:11946, 32:15697, 33:20478, 34:22854, 35:20718,

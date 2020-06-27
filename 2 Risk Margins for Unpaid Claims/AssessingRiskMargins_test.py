@@ -3,10 +3,10 @@ from AssessingRiskMargins import AssessingRiskMargins
 
 class test_AssessingRiskMargins(unittest.TestCase):
 
-    def test_fall_16_2(self):
+    def test_16_fall_2(self):
         pass
 
-    def test_spring_16_7(self):
+    def test_16_spring_7(self):
         arm = AssessingRiskMargins()
 
         sources = [0.06, 0.08, 0.16]
@@ -35,7 +35,7 @@ class test_AssessingRiskMargins(unittest.TestCase):
         #  May be costly to work at the granular level
         #  Extra detail may not provide material improvement
 
-    def test_fall_17_2(self):
+    def test_17_fall_2(self):
         #a) Describe each of the following sources of risk:
         # Parameter selection error for internal systemic risk
         # Random component of parameter risk
@@ -65,13 +65,13 @@ class test_AssessingRiskMargins(unittest.TestCase):
         #   • The internal systemic risk correlation in the extreme tails may be more than 25%.
         #   • There may be other risk drivers than those used.
 
-    def test_spring_17_2(self):
+    def test_17_spring_2(self):
         pass
 
-    def test_fall_18_6(self):
+    def test_18_fall_6(self):
         pass
 
-    def test_CAS7_spring_19_9(self):
+    def test_CAS7_19_spring_9(self):
         pass
 
 if __name__ == '__main__':

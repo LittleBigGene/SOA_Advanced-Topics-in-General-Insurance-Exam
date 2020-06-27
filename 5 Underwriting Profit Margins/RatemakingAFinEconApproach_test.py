@@ -4,7 +4,7 @@ from sympy import symbols
 from RatemakingAFinEconApproach import Ratemaking_A_FinEcon_Approach as FinEconRatemaking
 
 class test_RatemakingAFinEconApproach(unittest.TestCase):
-    def test_spring_19_7(self):
+    def test_19_spring_7(self):
         targetModel = FinEconRatemaking()
 
         exp_r = symbols('r')
@@ -30,7 +30,7 @@ class test_RatemakingAFinEconApproach(unittest.TestCase):
         #b
         self.assertAlmostEqual(-.0341, sol, 4) 
 
-    def test_fall_16_7(self):
+    def test_16_fall_7(self):
         targetModel = FinEconRatemaking()
         
         # a
@@ -57,7 +57,7 @@ class test_RatemakingAFinEconApproach(unittest.TestCase):
         # The model only covers risk that varies with market returns. As such, it ignores unique insurance risks such as catastrophe.
         # The insurance market cannot simply be appended to the stock market.
        
-    def test_spring_16_5(self):
+    def test_16_spring_5(self):
         
         p = symbols('p')
         riskFree, riskAdjLoss = 0.01, -0.06
@@ -87,7 +87,7 @@ class test_RatemakingAFinEconApproach(unittest.TestCase):
         
         # The absolute value of beta should be increased.
 
-    def test_fall_17_3(self):
+    def test_17_fall_3(self):
         targetModel = FinEconRatemaking()        
 
         #a
@@ -139,7 +139,7 @@ class test_RatemakingAFinEconApproach(unittest.TestCase):
         )        
         self.assertAlmostEqual(re_B, .209, 3)
 
-    def test_spring_17_3(self):
+    def test_17_spring_3(self):
         #a) assumptions of the Captial Asset Pricing Model
         #   • Investors are risk averse.
         #   • Investors are price takers.
@@ -163,7 +163,7 @@ class test_RatemakingAFinEconApproach(unittest.TestCase):
         )
         self.assertAlmostEqual(1.15/100, sol, 4)
 
-    def test_fall_18_3(self):
+    def test_18_fall_3(self):
         
         p = symbols('p')        
 

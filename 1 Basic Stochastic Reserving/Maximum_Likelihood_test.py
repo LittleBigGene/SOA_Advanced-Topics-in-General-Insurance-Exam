@@ -3,7 +3,7 @@ import unittest
 from Maximum_Likelihood import Stochastic_Reserving
 
 class test_StochasticReserving(unittest.TestCase):
-    def test_spring_19_5(self):
+    def test_19_spring_5(self):
         claims = { 11: 5000, 12: 7500, 13: 8000, 14: 8500,
                    21: 6000, 22: 9000, 23: 8500,
                    31: 7000, 32:10000,
@@ -26,7 +26,7 @@ class test_StochasticReserving(unittest.TestCase):
 
         self.assertAlmostEqual(622, 8000*(G30 - AY2017)/G6, 0 )
 
-    def test_fall_16_5(self):
+    def test_16_fall_5(self):
         claims = { 11: 4000, 12: 7000, 13: 8000,
                    21: 5000, 22: 7000, 
                    31: 6000}
@@ -73,7 +73,7 @@ class test_StochasticReserving(unittest.TestCase):
         actual_pmt = 3800        
         self.assertLessEqual(actual_pmt - expected_pmt, total_sd)
     
-    def test_spring_16_3(self):
+    def test_16_spring_3(self):
         #(a) (1.5 points) State two advantages and one disadvantage of using a parametric
         #    cumulative distribution function to model loss development.
 
@@ -104,7 +104,7 @@ class test_StochasticReserving(unittest.TestCase):
         reserve = ULT_2013 - 7250
         self.assertAlmostEqual(86, (reserve * σ2) ** 0.5, 0) 
 
-    def test_fall_17_5(self):
+    def test_17_fall_5(self):
         cumulative_reported = [8000, 9500, 10000,
                                4000, 6000, 
                                6000]
@@ -159,7 +159,7 @@ class test_StochasticReserving(unittest.TestCase):
         #       No, it seems to be increasing. The residuals do not support the model.
         #       Or with the small number of points, a trend is hard to establish.
         
-    def test_spring_17_5(self):
+    def test_17_spring_5(self):
         #a) State one advantage and one disadvantage of using a parametric distribution function to model loss development.
         #   Advantages:
         #   • Provides smoothing
@@ -200,7 +200,7 @@ class test_StochasticReserving(unittest.TestCase):
         #f) Indicate which of the LDF and Cape Cod methods is likely to have a smaller standard deviation of the total reserve. Justify your response.
         #   Cape Cod likely has a smaller standard deviation because of the additional information the exposure base provides.
 
-    def test_fall_18_5(self):
+    def test_18_fall_5(self):
 
         cumulative_reported = [6000, 5900, 6200,
                                4000, 5500, 
@@ -242,7 +242,7 @@ class test_StochasticReserving(unittest.TestCase):
         # Mack assumes that for each development age the expected value and variance are a constant multiple of past values with constant independent of accident year. 
         # 3This situation has different development ages by accident year and hence different factors are required.
 
-    def test_spring_18_6(self):
+    def test_18_spring_6(self):
         clark = Stochastic_Reserving()  
         olp = [10000, 8500, 12000]
         clark.θ = 6.689

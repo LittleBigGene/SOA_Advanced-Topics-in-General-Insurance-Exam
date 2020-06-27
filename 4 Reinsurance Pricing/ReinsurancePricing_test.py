@@ -5,7 +5,7 @@ from ReinsurancePricing import Reinsurance_Pricing
 
 class test_ReinsurancePricing(unittest.TestCase):
 
-    def test_spring_19_2(self):        
+    def test_19_spring_2(self):        
         ExpectedLoss = Reinsurance_Pricing()
         ExpectedLoss.ILF = {0:0, 1:1, 2:1.16 , 3:1.28 , 4:1.38 }
         ExpectedLoss.AP = 1
@@ -37,7 +37,7 @@ class test_ReinsurancePricing(unittest.TestCase):
         loadedLossCost =  0.1 * ExpectedLoss.swing_plan(0.375,.125,100/80,0.04) + 0.75 * ExpectedLoss.swing_plan(0.375,.125,100/80,0.19) + 0.15 * ExpectedLoss.swing_plan(0.375,.125,100/80,0.44)
         self.assertAlmostEqual( loadedLossCost, .2469, 4)
     
-    def test_spring_19_8(self):
+    def test_19_spring_8(self):
         annualPrem = 50
         margin = .1 * annualPrem
         OccurrenceLimit = 200         
@@ -66,7 +66,7 @@ class test_ReinsurancePricing(unittest.TestCase):
         a2Loss = annualPrem - loss - profitCommission + additionalPrem
         self.assertAlmostEqual(.15, a1Profit/(a1Profit-a2Loss), 3 )
 
-    def test_fall_16_1(self):
+    def test_16_fall_1(self):
         treaty = Reinsurance_Pricing()
                        
         a = treaty.loss_cost_rate(
@@ -83,7 +83,7 @@ class test_ReinsurancePricing(unittest.TestCase):
         # Historical premiums should be adjusted for rate changes and for exposure (payroll) inflation. 
         # Historical losses should be adjusted for trend and for development.
     
-    def test_fall_16_8(self):
+    def test_16_fall_8(self):
         treaty = Reinsurance_Pricing()
 
         def expected (vector):
@@ -125,7 +125,7 @@ class test_ReinsurancePricing(unittest.TestCase):
         # A surplus share treaty has a larger share of the larger risks and none of the smaller risks. 
         # This results in a loss ratio distribution with a larger variance than a quota share treaty.
 
-    def test_spring_16_1(self):
+    def test_16_spring_1(self):
         # surplus share with retained line of 500
         insured_values = np.clip(np.array([100,200,500,1000]), 0, 500)
 
@@ -143,7 +143,7 @@ class test_ReinsurancePricing(unittest.TestCase):
         # c) The surplus share reinsurance       will inure to the benefit of the property catastrophe cover.
         # d) The property per risk excess treaty will inure to the benefit of the property catastrophe cover.
 
-    def test_spring_16_8(self):
+    def test_16_spring_8(self):
         #a
         # Sliding scale commission
         # Profit commission
@@ -174,7 +174,7 @@ class test_ReinsurancePricing(unittest.TestCase):
 
         pass
 
-    def test_fall_17_1(self):
+    def test_17_fall_1(self):
         #a
         # The aggregate excess factor is the average amount of loss in excess of the aggregate limit,       divided by the expected loss. 
         # The Table M charge factor   is the average amount of loss in excess of r times the expected loss, divided by the expected loss. 
@@ -209,7 +209,7 @@ class test_ReinsurancePricing(unittest.TestCase):
         #   • Rulings awarding damages in excess of policy limits
         #   • ALAE being included with losses and the total exceeding policy limits
 
-    def test_fall_17_8(self):
+    def test_17_fall_8(self):
         cat = Reinsurance_Pricing()
         cat.mean, cat.variance = 1, 2 # geometric distribution
 
@@ -229,7 +229,7 @@ class test_ReinsurancePricing(unittest.TestCase):
 
         self.assertAlmostEqual(1.581, cv, 3)
 
-    def test_spring_17_1(self):
+    def test_17_spring_1(self):
         cat = Reinsurance_Pricing()
 
         exp = {
@@ -261,7 +261,7 @@ class test_ReinsurancePricing(unittest.TestCase):
         # For case (ii) information about untrended losses below 200,000 would be needed. 
         #   Assuming the 6% trend factor applies to these losses, untrended losses of 200,000/1.06^4 = 158,419 (likely rounded to 150,000) or larger would be required.
 
-    def test_spring_17_8(self):
+    def test_17_spring_8(self):
         cat = Reinsurance_Pricing()
         cat.mean, cat.variance = 2, 2 # poisson distribution
         loss_size_probability = [0, .4, .3, .2, .1]
@@ -282,7 +282,7 @@ class test_ReinsurancePricing(unittest.TestCase):
 
         #c) calculate parameters for lognormal distribution          
 
-    def test_spring_18_8(self):
+    def test_18_spring_8(self):
         cat = Reinsurance_Pricing()
         cat.mean, cat.variance = 1, 0.5*0.5 # binomial distribution
         loss_size_probability = [0, .25, .25, .25, .25]
@@ -298,7 +298,7 @@ class test_ReinsurancePricing(unittest.TestCase):
         p = cat.aggregate_loss_probability(loss_size_probability, aggregate_losses_prob, 8)
         self.assertAlmostEqual(.015625, p/2 )
 
-    def test_fall_18_1(self):        
+    def test_18_fall_1(self):        
         tolerant = Reinsurance_Pricing()
 
         def expected (vector):
@@ -334,7 +334,7 @@ class test_ReinsurancePricing(unittest.TestCase):
         assert 1 == 1 
 
 
-    def test_fall_18_8(self):
+    def test_18_fall_8(self):
         #a trend and ultimate losses
         #b Define free cover.
         #   Free cover occurs when no losses trend into the highest portion of the layer covered.
@@ -345,7 +345,7 @@ class test_ReinsurancePricing(unittest.TestCase):
         #   This is reasonable for homeowners insurance, but not for commercial property.
         pass
 
-    def test_spring_18_2(self):
+    def test_18_spring_2(self):
         pricing = Reinsurance_Pricing()
         insuredValue = pd.Series(data=[2000,20000,8000,12500,4000])
         loss =  pd.Series(data=[400,16000,3200,12500,1200])
