@@ -1,4 +1,5 @@
 import unittest
+from sympy import symbols, solve
 from AssessingRiskMargins import AssessingRiskMargins
 
 class test_AssessingRiskMargins(unittest.TestCase):
@@ -70,6 +71,23 @@ class test_AssessingRiskMargins(unittest.TestCase):
 
     def test_18_fall_6(self):
         pass
+
+    def test_18_spring_3(self):
+        CV2_ext = (3/10)**2 * (2**2 + 1**2 + 3**2) + (7/10)**2 * (2**2 + 1**2 + 1**2)
+        self.assertAlmostEqual(CV2_ext, 4.2)
+        
+        CV2, CV2_ind  = 9.6**2, 8**2
+        CV2_int = CV2 - CV2_ind -  CV2_ext        
+        self.assertAlmostEqual(CV2_int, 23.96)
+
+        v = symbols('v')
+        sol = solve((0.7*v)**2 + (.3*3)**2 + 2 * 0.75 * (0.7*v) * (0.3*3) - CV2_int)
+        self.assertAlmostEqual(sol[1], 5.9765172)
+
+        #b) approach if external systemic risk are partally correlated
+        #c) hindsight analysis
+        #d) hindsight analysis for short-tail vs long-tail
+
 
     def test_CAS7_19_spring_9(self):
         pass
