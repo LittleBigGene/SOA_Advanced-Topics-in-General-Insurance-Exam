@@ -5,7 +5,28 @@ from AssessingRiskMargins import AssessingRiskMargins
 class test_AssessingRiskMargins(unittest.TestCase):
 
     def test_16_fall_2(self):
-        pass
+        #a) using quantitative methods based on historical data to estimate the correlation among these sources of risk
+
+        # Any three of the following is sufficient to earn full credit.
+        #  Commonly used methods are complex and require a lot of data. The benefits may not outweigh the costs.
+        #  Correlations are heavily influenced by correlations in past data and may not accurately reflect the true values.
+        #  It is difficult to separate past results into independent and systemic components.
+        #  Internal systemic risk cannot be modeled using standard correlation modeling techniques.
+
+        #b) propose a numerical value for high correlation
+        # 0.5 < pick < 1, author used 0.75
+
+        #c
+        ocl, pl = 15/50*8.5, 35/50*6
+        cv2_int = ocl**2 + pl**2 + 2*.75*ocl*pl
+        self.assertAlmostEqual(cv2_int, 40.2075,4)
+
+        #d) Describe two implications of differing lengths of claim run-off when performing internal benchmarking of independent risk.
+
+        # For outstanding claim liabilities, longer run-off implies higher volatility and hence a higher coefficient of variation. 
+        # This is due to more time for random effects to have an impact. 
+        # For premium liabilities, long tails imply a higher coefficient of variation relative to outstanding claim liabilities. 
+        # This is due to smaller volume.
 
     def test_16_spring_7(self):
         arm = AssessingRiskMargins()
