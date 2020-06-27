@@ -84,14 +84,16 @@ class test_ExcessLossCoverageAndRetroRating(unittest.TestCase):
         retro.Loss_Ratios = np.array([.2, .3, .4, .5, .6])
 
         r = 0.6
-        self.assertAlmostEqual(0.44,retro.Φ_Limited(r, 0.2))
-        self.assertAlmostEqual(0.04,retro.Ψ_Limited(r, 0.2))
+        self.assertAlmostEqual(0.44,retro.Φ(r, 0.2))
+        self.assertAlmostEqual(0.04,retro.Ψ(r, 0.2))
 
         r = 0.8
-        self.assertAlmostEqual(0.32,retro.Φ_Limited(r, 0.2))
-        self.assertAlmostEqual(0.12,retro.Ψ_Limited(r, 0.2))
+        self.assertAlmostEqual(0.32,retro.Φ(r, 0.2))
+        self.assertAlmostEqual(0.12,retro.Ψ(r, 0.2))
        
 
+    def test_18_spring_7(self):
+        pass
 
 if __name__ == '__main__':
     unittest.main()

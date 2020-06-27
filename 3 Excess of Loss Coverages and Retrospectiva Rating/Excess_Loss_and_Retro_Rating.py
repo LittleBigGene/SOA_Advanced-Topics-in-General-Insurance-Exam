@@ -37,33 +37,19 @@ class Excess_Loss_and_Retro_Rating:
 
 
     # 4 Retrospective Rating
-    # Table M charge: The average amount by which a risk’s actual loss exceeds r times its expected loss, divided by its expected loss
-    def Φ(self, r):        
-        expected_excess = r * self.Loss_Ratios.mean()
-        excess = (self.Loss_Ratios - expected_excess).clip(0,1)            
-        return excess.mean() / self.Loss_Ratios.mean()
-
-    # Table M saving: The average amount by which a risk’s actual loss falls short of r times its expected loss, divided by its expected loss
-    def Ψ(self, r):               
-        expected_excess = r * self.Loss_Ratios.mean()
-        saving = (expected_excess - self.Loss_Ratios).clip(0,1)            
-        return saving.mean() / self.Loss_Ratios.mean()
-
+    # Table M charge: The average amount by which a risk’s actual         loss exceeds r times its expected loss, divided by its expected loss        
     # Table L charge: The average amount by which a risk’s actual limited loss exceeds r times its expected loss, divided by its expected loss
-    def Φ_Limited(self, r, loss_elimination_ratio):
-        avg_loss_ratio = self.Loss_Ratios.mean() / (1 - loss_elimination_ratio)
-        expected_excess = r * avg_loss_ratio
+    def Φ(self, r, k = 0):
+        avg_loss_ratio = self.Loss_Ratios.mean() / (1 - k)        
+        expected_excess = (self.Loss_Ratios - r * avg_loss_ratio).clip(0,1)               
+        return expected_excess.mean() / avg_loss_ratio + k # add loss_elimination_ratio, k
 
-        excess = (self.Loss_Ratios - expected_excess).clip(0,1)               
-        return excess.mean() / avg_loss_ratio + loss_elimination_ratio
-
+    # Table M saving: The average amount by which a risk’s actual         loss falls short of r times its expected loss, divided by its expected loss
     # Table L saving: The average amount by which a risk’s actual limited loss falls short of r times its expected loss, divided by its expected loss
-    def Ψ_Limited(self, r, loss_elimination_ratio):
-        avg_loss_ratio = self.Loss_Ratios.mean() / (1 - loss_elimination_ratio  )
-        expected_excess = r * avg_loss_ratio
-
-        saving = (expected_excess - self.Loss_Ratios).clip(0,1)              
-        return saving.mean() / avg_loss_ratio 
+    def Ψ(self, r, k = 0):
+        avg_loss_ratio = self.Loss_Ratios.mean() / (1 - k)        
+        expected_saving = (r * avg_loss_ratio - self.Loss_Ratios).clip(0,1)              
+        return expected_saving.mean() / avg_loss_ratio 
 
     
     def workers_compensation_retro_rating(self):
