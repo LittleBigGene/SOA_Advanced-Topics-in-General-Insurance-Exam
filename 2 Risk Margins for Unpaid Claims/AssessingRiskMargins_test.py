@@ -155,5 +155,22 @@ class test_AssessingRiskMargins(unittest.TestCase):
     def test_CAS7_2017_8(self):
         pass
 
+    def test_CAS7_2016_10(self):
+        # define external systemic risk and internal systemic risk
+
+        #identify and briefly describe two types of external systemic risk
+
+        #identify and briefly describe two types of internal systemic risk
+
+        #describle how the choice of valuation classes within a claims portfolio can affect internal systemic risk
+
+        pass
+
+    def test_CAS7_2015_8(self):
+        pass
+
+    def test_CAS7_2014_8(self):
+        pass
+
 if __name__ == '__main__':
     unittest.main()
