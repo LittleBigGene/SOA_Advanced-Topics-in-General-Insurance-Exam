@@ -149,8 +149,10 @@ class test_AssessingRiskMargins(unittest.TestCase):
         #c) hindsight analysis
         #d) hindsight analysis for short-tail vs long-tail
 
+    def test_CAS7_2019_9(self):
+        pass
 
-    def test_CAS7_19_spring_9(self):
+    def test_CAS7_2017_8(self):
         pass
 
 if __name__ == '__main__':

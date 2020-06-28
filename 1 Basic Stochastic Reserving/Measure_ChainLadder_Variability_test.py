@@ -180,11 +180,11 @@ class test_ChainLadder(unittest.TestCase):
 
         self.assertAlmostEqual(-0.76, target.T / target.Var_T**0.5, 2)
 
-    def test_CAS7_18_spring_7(self):
+    def test_CAS7_2018_7(self):
         # variance assumptions
-        assert 1 == 1
+        pass
 
-    def test_CAS7_18_spring_8(self):
+    def test_CAS7_2018_8(self):
         age_to_age_factors = {11: 1.7, 12: 1.35, 13: 1.10, 14: 1.05,
                               21: 2.5, 22: 1.55, 23: 1.08,
                               31: 2.0, 32: 1.40,
