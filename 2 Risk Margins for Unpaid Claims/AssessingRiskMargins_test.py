@@ -113,6 +113,24 @@ class test_AssessingRiskMargins(unittest.TestCase):
         self.assertAlmostEqual(CV2**.5, 7.41, 2)
 
     def test_18_fall_6(self):
+        #a) Describle bolt-on approach
+        # • It is an approach that uses separate analyses for estimating the central estimate of the liabilities and for estimating the risk margins.
+        # • It is any approach that does not use a single unified distribution of the distribution of future claim costs.
+
+        #b) Explain why quantitative techniques alone are insufficient when determining risk margins and must be supplemented by qualitative techniques.
+        # • Quantitative methods can be complex and require significant amounts of time, data, and cost.
+        # • Quantitative analysis of historical data cannot capture all sources of future uncertainty.
+
+        #c) Provide an example where qualitative techniques may be used in each of the following activities:
+        # (i) Preparing the claims portfolio for analysis
+        # (ii) Analyzing internal systemic risk
+        # (iii) Analyzing external systemic risk
+        # (iv) Determining correlation effects
+        
+        # (i) Selecting the risk classes to use or the granularity of classes
+        # (ii) Developing a balanced scorecard
+        # (iii) Identifying key systemic risks or ranking risk categories by expected impact
+        # (iv) May need to set correlations without data or decide which correlations to model        
         pass
 
     def test_18_spring_3(self):
