@@ -42,8 +42,18 @@ class test_AssessingRiskMargins(unittest.TestCase):
         self.assertAlmostEqual(27468734, riskMargin, 0)
 
         #c) Describe two areas of additional analysis that you may conduct to provide further comfort regarding the outcomes from the deployment of this framework.
+        #  Sensitivity testing: Vary each assumption to see the effect on risk margins.
+        #  Scenario testing: Tie outcomes to a set of valuation outcomes.
+        #  Internal benchmarking: For each source of uncertainty compare the coefficients of variation between classes for various liabilities.
+        #  External benchmarking: Review differences between benchmarks and the claim portfolio being analyzed.
+        #  Hindsight analysis: Compare past estimates against the latest view of the equivalent liabilities.
 
         #d) Identify four approaches that can be used to analyze independent sources of risk.
+        #  Mack method
+        #  Bootstrapping
+        #  Stochastic chain ladder
+        #  Generalized linear models
+        #  Bayesian
 
         #e  One of the attractions of this framework is that each of the sources of uncertainty being
         #   analyzed can be aligned with the central estimate analysis and appropriate decisions around volatility made in the context of that analysis.
@@ -88,7 +98,19 @@ class test_AssessingRiskMargins(unittest.TestCase):
         #   • There may be other risk drivers than those used.
 
     def test_17_spring_2(self):
-        pass
+        # The major challenge for candidates was matching risk indicators to sources of internal systemic risk.
+        # Specification error – Risk Indicators 1 and 3 
+        # Parameter selection error – Risk Indicators 2 and 6 
+        # Data error – Risk Indicators 4 and 5
+
+        Motor_score = 0.3*(3+2)/2 + 0.5*(5+3)/2 + 0.2*(4+7)/2 # 3.85
+        Home_score = 0.3*(5+3)/2 + 0.5*(3+4)/2 + 0.2*(4+6)/2 # 3.95
+        #Both scores are in the range 3-4 and hence CoV = 8.5% for each.
+        CV_m, CV_h = 8.5, 8.5
+
+        CV2 = (2/5*CV_m)**2 + (3/5*CV_h)**2 + 2*0.5*(2/5*CV_m)*(3/5*CV_h)
+         
+        self.assertAlmostEqual(CV2**.5, 7.41, 2)
 
     def test_18_fall_6(self):
         pass
