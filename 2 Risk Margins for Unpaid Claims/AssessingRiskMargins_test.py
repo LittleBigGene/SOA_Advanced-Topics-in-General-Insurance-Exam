@@ -150,9 +150,15 @@ class test_AssessingRiskMargins(unittest.TestCase):
         #d) hindsight analysis for short-tail vs long-tail
 
     def test_CAS7_2019_9(self):
+        # briefly describe three main sources of internal systemic risk according to marshall
+
+        # identify a reason why this company would score high in a balanced scorecard approach for each of the three sources of risks identified
+        # identify a reason why this company would score low  in a balanced scorecard approach for each of the three sources of risks identified
+        
         pass
 
     def test_CAS7_2017_8(self):
+        # Table 3
         pass
 
     def test_CAS7_2016_10(self):
