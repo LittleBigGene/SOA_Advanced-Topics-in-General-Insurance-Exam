@@ -199,7 +199,7 @@ class test_ChainLadder(unittest.TestCase):
                               61: 1.1017}
         
         target = Chain_Ladder(age_to_age_factors)
-        target.spearman_rank(True)        
+        target.spearman_rank()        
 
         # c
         self.assertAlmostEqual(-.24, target.T)
@@ -236,13 +236,25 @@ class test_ChainLadder(unittest.TestCase):
         self.assertAlmostEqual(1761, paidTriangle.standard_error(4), 0)
         self.assertAlmostEqual(1514, paidTriangle.standard_error(5), 0)
 
-        #print(sum(paidTriangle.AgeToAgeFactors) / 6)
+        #b) calculate SE of the reserve estimator for AY 4 & 5 combined
 
+        #c)
+        r = 0.574
+        self.assertAlmostEqual(1.214**2, r**2/(1-r**2) * (7-2-2), 3) 
 
+        # d) Determine whether this correlation is significant.
+        # The test statistic has a t distribution with three degrees of freedom. 
+        # At any reasonable significance level the null hypothesis of no correlation is not rejected. 
+        # There is no evidence of significant correlation.
 
+        # e)        
+        paidTriangle.calendar_year_effect_statistic()
+        print(paidTriangle.CYE_statistic_triangle)
 
-
-
+        # f)
+        # The test statistic is (1 – 4.875)/1.196 = –3.24 standard deviations below the mean. 
+        # It is significant at any reasonable significance level and thus there is a significant calendar year effect. 
+        # The chain ladder method may not be appropriate.
 
     def test_CAS7_2018_7(self):
         # variance assumptions

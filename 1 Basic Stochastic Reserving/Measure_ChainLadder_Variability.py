@@ -10,7 +10,8 @@ class Chain_Ladder:
         self.Triangle = triangle
         self.Dimension = max(triangle.keys()) // 10
         self.AgeToAgeFactors , self.AgeToUltimateFactors = [], []     
-         
+        self.AgaToAgeFactorsTriangle = {}
+
     def calc_AgeToAgeFactors(self):         
 
         for dev in range(1, self.Dimension):
@@ -18,7 +19,9 @@ class Chain_Ladder:
             for acc in range(1, self.Dimension - dev + 1):
                 currTotal += self.Triangle[ acc * 10 + dev    ]
                 nextTotal += self.Triangle[ acc * 10 + dev + 1]
-        
+
+                self.AgaToAgeFactorsTriangle[acc*10 + dev] = self.Triangle[ acc * 10 + dev +1] / self.Triangle[ acc * 10 + dev] 
+
             self.AgeToAgeFactors.append(nextTotal / currTotal)            
 
         cumulativeFactor = 1
@@ -173,6 +176,38 @@ class Chain_Ladder:
         self.Var_T =  1 / ( (I- 2) * (I-3) / 2 )
 
     # Appendix H: Testing for Calendar Year Effects
+
+    def calendar_year_effect_statistic(self, show=False):                
+        if show:
+            print(self.AgaToAgeFactorsTriangle)
+        self.RankTriangle = {}
+       
+        for d in range(1, 7):
+            tempList = []
+            for a in range(1,7-d+1):
+                tempList.append(self.AgaToAgeFactorsTriangle[a*10 + d])
+            tempRank = pd.Series(tempList).rank()        
+
+            for a in range(1,7-d+1):
+                if tempRank[a-1] > tempRank.median():
+                    self.RankTriangle[a*10 + d] = "L" #large
+                elif tempRank[a-1] < tempRank.median(): 
+                    self.RankTriangle[a*10 + d] = "S" #small
+                else:
+                    self.RankTriangle[a*10 + d] = "*"
+
+
+        self.CYE_statistic_triangle={}
+        for key in self.RankTriangle:     
+            diagonal = key % 10 + key // 10
+            
+            if diagonal in self.CYE_statistic_triangle.keys():
+                self.CYE_statistic_triangle[diagonal] += self.RankTriangle[key]
+            else:
+                self.CYE_statistic_triangle[diagonal] = self.RankTriangle[key]
+
+        if show:
+            self.CYE_statistic_triangle
 
 
     def natural_starting_values(self, f):
