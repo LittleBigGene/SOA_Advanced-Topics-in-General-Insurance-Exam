@@ -30,15 +30,13 @@ class Stochastic_Reserving:
         return (variance * amount + sd ** 2) ** 0.5
 
 
-    def estimate_variance(self, increments, ULTs, Gs):        
-        degrees_of_freedom = 1
-
+    def estimate_variance(self, increments, ULTs, Gs, dof):        
         variance = 0 
         for actual, ult, g in zip(increments, ULTs, Gs):
             estimate = ult * g
             variance += (actual - estimate) ** 2 / estimate
 
-        return  variance / degrees_of_freedom
+        return  variance / dof
 
     # 3 Key Assumptions of this Model
     #   Incremental losses are independent and identically distributed(iid)

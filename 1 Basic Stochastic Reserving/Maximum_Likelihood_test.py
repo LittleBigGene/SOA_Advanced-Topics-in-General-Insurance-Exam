@@ -99,6 +99,8 @@ class test_StochasticReserving(unittest.TestCase):
         self.assertAlmostEqual(6671, Y, 0)
         
         # d) identify the number of degress fo freedom
+        # number of data points - number of AYs - number of parameter estimator
+
         σ2 = 47
         # e
         reserve = ULT_2013 - 7250
@@ -136,18 +138,18 @@ class test_StochasticReserving(unittest.TestCase):
         ULT = [10000 / G3, 10000 / G3, 10000 / G3,
                 6000 / G2,  6000 / G2]
                              
-        var_estimator = clark.estimate_variance(incremental_reported, ULT, G)
+        var_estimator = clark.estimate_variance(incremental_reported, ULT, G, 6-3-2)
         self.assertAlmostEqual(647, var_estimator, 0)
 
         #d
         self.assertAlmostEqual(1639, (IBNR * var_estimator)**0.5, 0)
-
+ 
         #e
         actual = [6000 - 4000]
         ult = [6000 / G2]
         g =  [(G2 - G1)]
 
-        var = clark.estimate_variance(actual, ult, g)
+        var = clark.estimate_variance(actual, ult, g, 6-3-2)
         normalized_residual = (var / var_estimator) ** 0.5
         self.assertAlmostEqual(0.69, normalized_residual, 2)
         
@@ -165,7 +167,7 @@ class test_StochasticReserving(unittest.TestCase):
         #   • Provides smoothing
         #   • Small number of parameters to estimate
         #   • Does not require equal spacing of data points
-        #   Disadvantage:
+        #   Disadvantage: 
         #   • Development pattern must be increasing
 
         cumulative_reported = [4000, 6000, 8000,
@@ -248,8 +250,15 @@ class test_StochasticReserving(unittest.TestCase):
         clark.θ = 6.689
 
         #a) example where assumption might not hold
+        # • There may be positive correlation if all periods are equally affected by a change in loss inflation.
+        # • There may be negative correlation if a large settlement in one period replaces a stream of payments in later periods.
+        # • Different risks and mixes of business may have been written in each period with possibly different claims handling and settlement strategies, 
+        #   resulting in different emergence patterns.
 
         #b) explan why variance estimates are an approximation
+        # • The variance/mean scale parameter is estimated.
+        # • The functions are nonlinear, so the lower bound does not provide exact variance estimates.
+        # • The true lower bound is based on the expected value of the matrix of second derivatives, but Clark approximates it with the observed information matrix.
 
         #c) caluclate MLE of ELR
         G3 = clark.exponential(clark.average_age(3) )
@@ -263,6 +272,25 @@ class test_StochasticReserving(unittest.TestCase):
         #d) expected payment in 2018 for AY2017
         ay17_payment = olp[2] * reserve/ibnr
         self.assertAlmostEqual(3193, ay17_payment * (G2-G1), 0)
+
+    def test_cas7_2014_5(self):
+        clark = Stochastic_Reserving()         
+        clark.θ = 24
+        clark.ω = 2.5
+
+        self.assertAlmostEqual(508.800, 800*clark.loglogistic(30),1)
+        
+    def test_cas7_2014_14(self):
+        pass
+
+    def test_cas7_2015_2(self):        
+        pass
+    
+    def test_cas7_2016_3(self):
+        pass
+    
+    def test_cas7_2016_4(self):
+        pass
 
 
 if __name__ == '__main__':
