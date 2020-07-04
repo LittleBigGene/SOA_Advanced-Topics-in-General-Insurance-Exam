@@ -155,13 +155,19 @@ class Chain_Ladder:
 
             if show:
                 print( "rank_prev" )
+                print( prev_a2a_factors )
                 print( rank_prev )
 
                 print( "rank_curr" )
+                print( curr_a2a_factors )
                 print( rank_curr )
                 
                 print(f'sum of squared diff = {S} T = {t}')  
         
+        if show:
+            print(f"Tk = {self.Tk}")
+            print(f"Wk = {self.Wk}")
+
         self.T = (pd.Series(self.Tk) * pd.Series(self.Wk)).sum() / pd.Series(self.Wk).sum()
 
         self.Var_T =  1 / ( (I- 2) * (I-3) / 2 )

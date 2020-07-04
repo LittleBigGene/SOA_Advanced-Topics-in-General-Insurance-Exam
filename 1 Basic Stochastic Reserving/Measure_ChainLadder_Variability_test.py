@@ -53,10 +53,23 @@ class test_ChainLadder(unittest.TestCase):
         self.assertAlmostEqual(3782, paidTriangle.standard_error(6),0)                
         self.assertAlmostEqual(6915, paidTriangle.standard_error(7),0)
     
-        # c) Normal approximation 
-        # d) Lognormal 
-        # e) why weighted regression
-        # f) Venter
+        # c) why normal approximation may not be reasonable ?
+        # The normal approximation is symmetric and may allow for more negative movement than is reasonable. 
+        # In this case, it can be noted either that the standard deviation is close to half the reserve or that there is a significant probability of negative development.
+        
+        # d) Recommend and justify an approach that may be superior 
+        # A lognormal distribution may be a superior model. 
+        # It is right skewed and thus provides a lower probability of downward movement. 
+        # The lognormal distribution assigns probability only to positive values.
+
+        # e) why weighted regression ?
+        # An unweighted regression assumes a constant variance. 
+        # In the Mack model the variance is proportional to the developed value and thus a weighted regression is needed.
+        
+        # f) Describe two other approaches that Venter proposes for comparing or evaluating different models.
+        #  Test the significance of the estimated factors.
+        #  Examine the residuals to determine if the model is linear in the specified manner.
+        #  Examine the residuals over time to determine if there are any patterns.
 
     def test_16_spring_4(self):
         paidClaims = { 11: 9791, 12:12431, 13:13033, 14:14212, 15:14486, 16:14867, 17:15155,
@@ -70,14 +83,21 @@ class test_ChainLadder(unittest.TestCase):
         paidTriangle = Chain_Ladder(paidClaims)
         paidTriangle.calc_AgeToAgeFactors()               
         
-        #a
+        # a
         self.assertAlmostEqual(37.514, paidTriangle.a_proportionality_constant(4), 3)
 
-        #b
+        # b
         self.assertAlmostEqual(111, paidTriangle.standard_error(3), 0)
 
-        #c
-        # Mack's three assumptions
+        # c) state Mack's three assumptions and 
+        # explain why that assumption does or does not prevent the value form decreasing from one development year to the next
+        # (1) The expected value is the previous value times a constant that depends only on the development year. 
+        #     This assumption does not prevent values from decreasing because it only relates to the expected, not the actual value. 
+        #     Alternatively, the constant can be less than one, which implies an expected decrease.
+        # (2) The variance is the previous value times a factor that depends only on the development year. 
+        #     This assumption does not prevent values from decreasing because with variability in outcomes, that could extend to decreasing values.
+        # (3) Values from different accident years are independent. 
+        #     This assumption makes no statement about the magnitude of the values and so allows for decreasing values.
 
         #d
         n = 21
@@ -86,13 +106,18 @@ class test_ChainLadder(unittest.TestCase):
         #e
         SSE = 126347521
         venter = Venter_Factors()
-        self.assertAlmostEqual(561545, venter.adjusted_SSE(SSE, n, p), 0)
+        self.assertAlmostEqual(561545,    venter.adjusted_SSE(SSE, n, p), 0)
         self.assertAlmostEqual(223735552, venter.adjusted_SSE_AIC(SSE, n, p), 0)
         self.assertAlmostEqual(301539122, venter.adjusted_SSE_BIC(SSE, n, p), 0)
 
         # f) Venter proposes investigating models other than the standard chain ladder 
         #   (where each value is multiplied by a factor that depends only on the development year).
         #   Describe one such alternative model, using words, not formulas.
+
+        # (1) Add a constant after multiplying by the chain ladder development factor.
+        # (2) Multiplication of factors representing the accident year and development year. 
+        #     This can also be described as a parameterized version of the Bornhuetter Ferguson method.
+        # (3) As in number (2) but add a factor for calendar year.
 
     def test_17_fall_4(self):        
         rawPaid = [9146,12176,17670,18546,18128,18517,18888,
@@ -115,16 +140,16 @@ class test_ChainLadder(unittest.TestCase):
         self.assertAlmostEqual(0.011, paidTriangle.square_of_SE_of_overall(2), 3)
 
         #c) explain why the estimators are dependent?
+        # Each reserve estimate depends on the sequence of development factors. Some factors are used in more than one reserve estimate. 
+        # For example, f6 is used for both AY 4 and AY 5 reserve estimates. Any error in this factor will appear in both calculations.
 
         #d)
         ay, dy = 4, 3
         f = paidTriangle.AgeToAgeFactors[(dy-1) -1]
-        actual_ = paidTriangle.Triangle[ay*10 + dy-1]
-
-        expected = actual_ * f        
+        actual_ = paidTriangle.Triangle[ay*10 + dy-1] 
         actual = paidTriangle.Triangle[ay*10 + dy]
 
-        self.assertAlmostEqual(76.43, (actual - expected) / (actual_ ** 0.5),2 )
+        self.assertAlmostEqual(76.43, (actual - actual_ * f) / (actual_ ** 0.5),2 )
 
         #e
         n, p = 6*(6+1)/2, 6
@@ -132,7 +157,7 @@ class test_ChainLadder(unittest.TestCase):
         #f 
         SSE = 184086659
         venter = Venter_Factors()
-        self.assertAlmostEqual(818163, venter.adjusted_SSE(SSE, n, p), 0)
+        self.assertAlmostEqual(818163,    venter.adjusted_SSE(SSE, n, p), 0)
         self.assertAlmostEqual(325979727, venter.adjusted_SSE_AIC(SSE, n, p), 0)
         self.assertAlmostEqual(439338494, venter.adjusted_SSE_BIC(SSE, n, p), 0)
 
@@ -174,28 +199,24 @@ class test_ChainLadder(unittest.TestCase):
                               61: 1.1017}
         
         target = Chain_Ladder(age_to_age_factors)
-        target.spearman_rank()        
+        target.spearman_rank(True)        
 
+        # c
         self.assertAlmostEqual(-.24, target.T)
 
+        # d
         self.assertAlmostEqual(-0.76, target.T / target.Var_T**0.5, 2)
+        # a value of Tk close to 0 indicates that the development factors between development years are not correlated.
+        # any other value indicates that that factors are (positively or negatively) correlated
 
-    def test_CAS7_2018_7(self):
-        # variance assumptions
-        pass
-
-    def test_CAS7_2018_8(self):
-        age_to_age_factors = {11: 1.7, 12: 1.35, 13: 1.10, 14: 1.05,
-                              21: 2.5, 22: 1.55, 23: 1.08,
-                              31: 2.0, 32: 1.40,
-                              41: 1.8}
-                              
-        target = Chain_Ladder(age_to_age_factors)
-        target.spearman_rank()    
-
-        self.assertAlmostEqual(0.3333, target.T, 4)
-        
-        self.assertAlmostEqual(0.3333, target.Var_T,4)
+        # e) describe two alternative models suggested by Venter
+        # • Linear with constant
+        # • Factor times parameter
+        # • Factor times parameter plus a calendar year effect
+        # • Bornhuetter Ferguson
+        # • Parameterized Bornhuetter Ferguson
+        # • Cape Cod
+        # • Additive
 
     def test_18_spring_5(self):
         paidClaims = { 11: 9146, 12:12176, 13:17670, 14:18546, 15:18128, 16:18517, 17:18888,
@@ -215,7 +236,30 @@ class test_ChainLadder(unittest.TestCase):
         self.assertAlmostEqual(1761, paidTriangle.standard_error(4), 0)
         self.assertAlmostEqual(1514, paidTriangle.standard_error(5), 0)
 
-        print(sum(paidTriangle.AgeToAgeFactors) / 6)
+        #print(sum(paidTriangle.AgeToAgeFactors) / 6)
+
+
+
+
+
+
+
+    def test_CAS7_2018_7(self):
+        # variance assumptions
+        pass
+
+    def test_CAS7_2018_8(self):
+        age_to_age_factors = {11: 1.7, 12: 1.35, 13: 1.10, 14: 1.05,
+                              21: 2.5, 22: 1.55, 23: 1.08,
+                              31: 2.0, 32: 1.40,
+                              41: 1.8}
+                              
+        target = Chain_Ladder(age_to_age_factors)
+        target.spearman_rank()    
+
+        self.assertAlmostEqual(0.3333, target.T, 4)
+        
+        self.assertAlmostEqual(0.3333, target.Var_T,4)
 
 if __name__ == '__main__':
     unittest.main()
