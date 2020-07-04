@@ -247,20 +247,48 @@ class test_ChainLadder(unittest.TestCase):
         # At any reasonable significance level the null hypothesis of no correlation is not rejected. 
         # There is no evidence of significant correlation.
 
-        # e)        
+        # e)                
         paidTriangle.calendar_year_effect_statistic()
-        print(paidTriangle.CYE_statistic_triangle)
+        assert 'SSSSS*' == paidTriangle.CYE_statistic_triangle[6+1]
 
         # f)
         # The test statistic is (1 – 4.875)/1.196 = –3.24 standard deviations below the mean. 
         # It is significant at any reasonable significance level and thus there is a significant calendar year effect. 
         # The chain ladder method may not be appropriate.
 
-    def test_CAS7_2018_7(self):
+
+    def test_cas7_2015_4(self):
+        age_to_age_factors = {11: 7.0, 12: 2.55, 13: 1.6, 14: 1.3, 15: 1.2, 16: 1.05,
+                              21: 6.0, 22: 2.60, 23: 1.4, 24: 1.5, 25: 1.1,
+                              31: 5.0, 32: 2.50, 33: 1.8, 34: 1.2,
+                              41: 5.5, 42: 2.80, 43: 1.5,                            
+                              51: 8.0, 52: 2.40,
+                              61: 7.0}
+
+        target = Chain_Ladder(age_to_age_factors)
+        target.Dimension = 6+1
+        target.AgaToAgeFactorsTriangle = age_to_age_factors
+        target.calendar_year_effect_statistic()
+        assert 'LSSSS*' == target.CYE_statistic_triangle[6+1]
+
+    def test_cas7_2016_5(self):
+        age_to_age_factors = {11: 1.324, 12: 1.127, 13: 1.065, 14: 1.025, 15: 1.012,
+                              21: 1.313, 22: 1.127, 23: 1.058, 24: 1.027,
+                              31: 1.344, 32: 1.135, 33: 1.070,
+                              41: 1.340, 42: 1.134, 
+                              51: 1.344}
+
+        target = Chain_Ladder(age_to_age_factors)
+        target.Dimension = 5+1
+        target.AgaToAgeFactorsTriangle = age_to_age_factors
+        target.calendar_year_effect_statistic()
+        assert 'LLLL*' == target.CYE_statistic_triangle[5+1]
+
+    def test_cas7_2018_7(self):
         # variance assumptions
         pass
 
-    def test_CAS7_2018_8(self):
+    def test_cas7_2018_8(self):
         age_to_age_factors = {11: 1.7, 12: 1.35, 13: 1.10, 14: 1.05,
                               21: 2.5, 22: 1.55, 23: 1.08,
                               31: 2.0, 32: 1.40,

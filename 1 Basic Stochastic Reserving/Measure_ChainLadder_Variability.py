@@ -177,25 +177,25 @@ class Chain_Ladder:
 
     # Appendix H: Testing for Calendar Year Effects
 
-    def calendar_year_effect_statistic(self, show=False):                
-        if show:
-            print(self.AgaToAgeFactorsTriangle)
+    def calendar_year_effect_statistic(self, show=False):              
         self.RankTriangle = {}
        
-        for d in range(1, 7):
+        for d in range(1, self.Dimension):
             tempList = []
-            for a in range(1,7-d+1):
+            for a in range(1,self.Dimension-d+1):
                 tempList.append(self.AgaToAgeFactorsTriangle[a*10 + d])
-            tempRank = pd.Series(tempList).rank()        
+            tempRank = pd.Series(tempList).rank()  
+            
+            if show:
+                print(tempRank)      
 
-            for a in range(1,7-d+1):
+            for a in range(1,self.Dimension-d+1):
                 if tempRank[a-1] > tempRank.median():
                     self.RankTriangle[a*10 + d] = "L" #large
                 elif tempRank[a-1] < tempRank.median(): 
                     self.RankTriangle[a*10 + d] = "S" #small
                 else:
                     self.RankTriangle[a*10 + d] = "*"
-
 
         self.CYE_statistic_triangle={}
         for key in self.RankTriangle:     
@@ -207,7 +207,7 @@ class Chain_Ladder:
                 self.CYE_statistic_triangle[diagonal] = self.RankTriangle[key]
 
         if show:
-            self.CYE_statistic_triangle
+            print(self.CYE_statistic_triangle)
 
 
     def natural_starting_values(self, f):

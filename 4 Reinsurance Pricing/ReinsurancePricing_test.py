@@ -327,10 +327,10 @@ class test_ReinsurancePricing(unittest.TestCase):
         #   • It is difficult to take into account the uncertainty about whether the treaty will be renewed.
 
 
-    def test_CAS8_2019_17(self):
+    def test_cas8_2019_17(self):
         pass
 
-    def test_CAS8_2014_23(self):
+    def test_cas8_2014_23(self):
         pass 
 
     def test_18_fall_8(self):
