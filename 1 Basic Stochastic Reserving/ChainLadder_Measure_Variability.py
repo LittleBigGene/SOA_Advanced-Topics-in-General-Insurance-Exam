@@ -3,7 +3,7 @@
 # Thomas Mack 1994
 
 import pandas as pd
-from ChainLadder_Basic import Chain_Ladder
+from ChainLadder_Base import Chain_Ladder
 
 class Chain_Ladder_Mack(Chain_Ladder):     
 
