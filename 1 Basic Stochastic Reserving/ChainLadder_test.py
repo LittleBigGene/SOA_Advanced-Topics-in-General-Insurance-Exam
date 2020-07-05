@@ -14,16 +14,27 @@ class test_ChainLadder(unittest.TestCase):
         paidTriangle.load_triangle(paidClaims)
         paidTriangle.calc_AgeToAgeFactors()       
 
-        #a
-        self.assertAlmostEqual(0.46620, paidTriangle.natural_starting_values(1),5)
-        self.assertAlmostEqual(0.23310, paidTriangle.natural_starting_values(2),5)
-        self.assertAlmostEqual(0.20979, paidTriangle.natural_starting_values(3),5)
-        self.assertAlmostEqual(0.09091, paidTriangle.natural_starting_values(4),5)
-        #b
-        self.assertAlmostEqual(21024, paidTriangle.starting_values(1),0)
-        self.assertAlmostEqual(20453, paidTriangle.starting_values(2),0)
-        self.assertAlmostEqual(23166, paidTriangle.starting_values(3),0)
-        self.assertAlmostEqual(30030, paidTriangle.starting_values(4),0)
+        showWork = False
+        #a)
+        self.assertAlmostEqual(0.46620, paidTriangle.natural_starting_values(1, showWork),5)
+        self.assertAlmostEqual(0.23310, paidTriangle.natural_starting_values(2, showWork),5)
+        self.assertAlmostEqual(0.20979, paidTriangle.natural_starting_values(3, showWork),5)
+        self.assertAlmostEqual(0.09091, paidTriangle.natural_starting_values(4, showWork),5)
+        #b)
+        self.assertAlmostEqual(21024, paidTriangle.starting_values(1, showWork),0)
+        self.assertAlmostEqual(20453, paidTriangle.starting_values(2, showWork),0)
+        self.assertAlmostEqual(23166, paidTriangle.starting_values(3, showWork),0)
+        self.assertAlmostEqual(30030, paidTriangle.starting_values(4, showWork),0)
+
+        #c)
+        h = [21209,20633,23626,30435]
+        # f = paidTriangle.h_to_f(h, showWork)
+        f_test = [0.46000,0.22494,0.21604,0.09901]
+
+        #d)
+        # unpaid = diagonal * (sum of f's to ULT)
+        #e)
+        # unpaid = diagonal * (AgeToUlt - 1)
 
         #f
         self.assertAlmostEqual(937.5, paidTriangle.a_proportionality_constant(1),1)

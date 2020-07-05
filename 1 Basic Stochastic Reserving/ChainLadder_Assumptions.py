@@ -30,42 +30,41 @@ class Chain_Ladder_Venter(Chain_Ladder_Mack):
 
     def natural_starting_values(self, f, show=False):
         i = f-1
-        if (f == 1):      
+        if (f == 1):                  
+            result = 1 / self.AgeToUltimateFactors[i]
             if show:
-                print(f'f({f}) = 1/{self.AgeToUltimateFactors[i]}')                      
-            result = 1 / self.AgeToUltimateFactors[i]            
-        else:            
-            if show:
-                print(f'f({f}) = ({self.AgeToAgeFactors[i-1]} - 1 ) / {self.AgeToUltimateFactors[i-1]}')
-                        
+                print(f'f({f}) = 1/{self.AgeToUltimateFactors[i]} = {round(result,5)}')                      
+        else:                                    
             result = (self.AgeToAgeFactors[i-1] - 1 ) / self.AgeToUltimateFactors[i-1]
+            if show:
+                print(f'f({f}) = ({self.AgeToAgeFactors[i-1]} - 1 ) / {self.AgeToUltimateFactors[i-1]} = {round(result,5)}')            
         
-
         return result
 
-    def starting_values (self, h): 
+    def starting_values (self, h, show=False): 
         cumulative = []  
         for (key, value) in self.Triangle.items():
             if (key // 10 == h):
                 cumulative.append(value)        
         
-        incremental = []
-        incremental.append(cumulative[0])
+        increment = []
+        increment.append(cumulative[0])
         if len(cumulative) > 1 :
             
             numerator, denominator = 0, 0
             for dev in range(1, len(cumulative)):
-                incremental.append(cumulative[dev] - cumulative[dev - 1])
+                increment.append(cumulative[dev] - cumulative[dev - 1])
 
-            for dev in range(1, len(incremental) + 1):                                               
+            for dev in range(1, len(increment) + 1):                                               
                 nsv = self.natural_starting_values(dev)
-                numerator += nsv * incremental[dev - 1]
+                numerator += nsv * increment[dev - 1]
                 denominator += nsv ** 2
         else:
             nsv = self.natural_starting_values(1)
             numerator = nsv * cumulative[0]
             denominator = nsv ** 2
 
-        # print(f'Incremental {incremental}')
-
+        if show:
+            print(f'Incremental {increment}')
+        
         return numerator / denominator   
