@@ -1,6 +1,6 @@
 import pandas as pd
 import unittest
-from ChainLadder_Measure_Variability import Chain_Ladder
+from ChainLadder_Measure_Variability import Chain_Ladder_Mack
 from ChainLadder_Assumptions import Chain_Ladder_Venter
 
 class test_ChainLadder(unittest.TestCase):
@@ -10,7 +10,8 @@ class test_ChainLadder(unittest.TestCase):
                        31:12000, 32:15000,
                        41:14000 }
         
-        paidTriangle = Chain_Ladder(paidClaims)
+        paidTriangle = Chain_Ladder_Venter()
+        paidTriangle.load_triangle(paidClaims)
         paidTriangle.calc_AgeToAgeFactors()       
 
         #a
@@ -38,7 +39,8 @@ class test_ChainLadder(unittest.TestCase):
                        61:14717, 62:20165,
                        71:16100 }
 
-        paidTriangle = Chain_Ladder(paidClaims)
+        paidTriangle = Chain_Ladder_Mack()
+        paidTriangle.load_triangle(paidClaims)
         paidTriangle.calc_AgeToAgeFactors()  
 
         # a
@@ -80,7 +82,8 @@ class test_ChainLadder(unittest.TestCase):
                        61:16037, 62:18544,
                        71:17360}
 
-        paidTriangle = Chain_Ladder(paidClaims)
+        paidTriangle = Chain_Ladder_Venter()
+        paidTriangle.load_triangle(paidClaims)
         paidTriangle.calc_AgeToAgeFactors()               
         
         # a
@@ -105,10 +108,9 @@ class test_ChainLadder(unittest.TestCase):
 
         #e
         SSE = 126347521
-        venter = Chain_Ladder_Venter()
-        self.assertAlmostEqual(561545,    venter.adjusted_SSE(SSE, n, p), 0)
-        self.assertAlmostEqual(223735552, venter.adjusted_SSE_AIC(SSE, n, p), 0)
-        self.assertAlmostEqual(301539122, venter.adjusted_SSE_BIC(SSE, n, p), 0)
+        self.assertAlmostEqual(561545,    paidTriangle.adjusted_SSE(SSE, n, p), 0)
+        self.assertAlmostEqual(223735552, paidTriangle.adjusted_SSE_AIC(SSE, n, p), 0)
+        self.assertAlmostEqual(301539122, paidTriangle.adjusted_SSE_BIC(SSE, n, p), 0)
 
         # f) Venter proposes investigating models other than the standard chain ladder 
         #   (where each value is multiplied by a factor that depends only on the development year).
@@ -128,9 +130,8 @@ class test_ChainLadder(unittest.TestCase):
                   15648,17240,25293,27767,26492,27056,27598,
                   17221,23473,34438,37806,36070,36838,37576]
 
-        helper = Chain_Ladder_Venter()
-        paidClaims = helper.convert_2_triangle(rawPaid, 7)
-        paidTriangle = Chain_Ladder(paidClaims)
+        paidTriangle = Chain_Ladder_Venter()
+        paidTriangle.convert_2_triangle(rawPaid, 7)        
         paidTriangle.calc_AgeToAgeFactors()  
 
         #a
@@ -155,11 +156,10 @@ class test_ChainLadder(unittest.TestCase):
         n, p = 6*(6+1)/2, 6
         
         #f 
-        SSE = 184086659
-        venter = Chain_Ladder_Venter()
-        self.assertAlmostEqual(818163,    venter.adjusted_SSE(SSE, n, p), 0)
-        self.assertAlmostEqual(325979727, venter.adjusted_SSE_AIC(SSE, n, p), 0)
-        self.assertAlmostEqual(439338494, venter.adjusted_SSE_BIC(SSE, n, p), 0)
+        SSE = 184086659        
+        self.assertAlmostEqual(818163,    paidTriangle.adjusted_SSE(SSE, n, p), 0)
+        self.assertAlmostEqual(325979727, paidTriangle.adjusted_SSE_AIC(SSE, n, p), 0)
+        self.assertAlmostEqual(439338494, paidTriangle.adjusted_SSE_BIC(SSE, n, p), 0)
 
     def test_17_spring_4(self):   
         rawPaid = [ 20587, 29243, 33208, 35957, 36328, 37131, 37871,
@@ -169,9 +169,8 @@ class test_ChainLadder(unittest.TestCase):
                     25065, 29536, 38140, 41630, 43510, 44432, 45317,
                     25024, 40688, 52885, 57724, 60332, 61610, 62838,
                     25387, 34597, 44968, 49083, 51300, 52387, 53431]                    
-        helper = Chain_Ladder_Venter()
-        paidClaims = helper.convert_2_triangle(rawPaid, 7)
-        paidTriangle = Chain_Ladder(paidClaims)
+        paidTriangle = Chain_Ladder_Mack()
+        paidTriangle.convert_2_triangle(rawPaid, 7)        
         paidTriangle.calc_AgeToAgeFactors()  
 
         #a
@@ -198,7 +197,8 @@ class test_ChainLadder(unittest.TestCase):
                               51: 1.4623, 52: 1.2069,
                               61: 1.1017}
         
-        target = Chain_Ladder(age_to_age_factors)
+        target = Chain_Ladder_Mack()
+        target.load_triangle(age_to_age_factors)        
         target.spearman_rank()        
 
         # c
@@ -227,7 +227,8 @@ class test_ChainLadder(unittest.TestCase):
                        61:15648, 62:17240,
                        71:17221}
 
-        paidTriangle = Chain_Ladder(paidClaims)
+        paidTriangle = Chain_Ladder_Mack()
+        paidTriangle.load_triangle(paidClaims)
         paidTriangle.calc_AgeToAgeFactors()       
 
         #a
@@ -265,7 +266,7 @@ class test_ChainLadder(unittest.TestCase):
                               51: 8.0, 52: 2.40,
                               61: 7.0}
 
-        target = Chain_Ladder(age_to_age_factors)
+        target = Chain_Ladder_Mack()
         target.Dimension = 6+1
         target.AgaToAgeFactorsTriangle = age_to_age_factors
         target.calendar_year_effect_statistic()
@@ -278,7 +279,7 @@ class test_ChainLadder(unittest.TestCase):
                               41: 1.340, 42: 1.134, 
                               51: 1.344}
 
-        target = Chain_Ladder(age_to_age_factors)
+        target = Chain_Ladder_Mack()
         target.Dimension = 5+1
         target.AgaToAgeFactorsTriangle = age_to_age_factors
         target.calendar_year_effect_statistic()
@@ -294,7 +295,8 @@ class test_ChainLadder(unittest.TestCase):
                               31: 2.0, 32: 1.40,
                               41: 1.8}
                               
-        target = Chain_Ladder(age_to_age_factors)
+        target = Chain_Ladder_Mack()
+        target.load_triangle(age_to_age_factors)
         target.spearman_rank()    
 
         self.assertAlmostEqual(0.3333, target.T, 4)

@@ -3,34 +3,9 @@
 # Thomas Mack 1994
 
 import pandas as pd
+from ChainLadder_Basic import Chain_Ladder
 
-class Chain_Ladder:    
-    # 1 Introduction and Overview
-    def __init__(self, triangle):
-        self.Triangle = triangle
-        self.Dimension = max(triangle.keys()) // 10
-        self.AgeToAgeFactors , self.AgeToUltimateFactors = [], []     
-        self.AgaToAgeFactorsTriangle = {}
-
-    def calc_AgeToAgeFactors(self):         
-
-        for dev in range(1, self.Dimension):
-            currTotal, nextTotal = 0, 0           
-            for acc in range(1, self.Dimension - dev + 1):
-                currTotal += self.Triangle[ acc * 10 + dev    ]
-                nextTotal += self.Triangle[ acc * 10 + dev + 1]
-
-                self.AgaToAgeFactorsTriangle[acc*10 + dev] = self.Triangle[ acc * 10 + dev +1] / self.Triangle[ acc * 10 + dev] 
-
-            self.AgeToAgeFactors.append(nextTotal / currTotal)            
-
-        cumulativeFactor = 1
-        for ageFactor in reversed(self.AgeToAgeFactors):            
-            cumulativeFactor = round(cumulativeFactor * ageFactor, 8)
-            self.AgeToUltimateFactors.insert(0, cumulativeFactor)     
-
-        # print(f'AgeToAgeFactor {self.AgeToAgeFactors}')            
-        # print(f'AgeToUltFactor {self.AgeToUltimateFactors}')
+class Chain_Ladder_Mack(Chain_Ladder):     
 
     # 2 Notations and First Analysis of the Chain Ladder Method
     #   C_i_k
@@ -210,40 +185,4 @@ class Chain_Ladder:
             print(self.CYE_statistic_triangle)
 
 
-    def natural_starting_values(self, f):
-        if (f == 1):                
-            result = 1 / self.AgeToUltimateFactors[f -1]            
-        else:
-            result = (self.AgeToAgeFactors[f-2] -1) / self.AgeToUltimateFactors[(f-1) -1]
-        
-        return result
 
-    def starting_values (self, h): 
-        cumulative = []  
-        for (key, value) in self.Triangle.items():
-            if (key // 10 == h):
-                cumulative.append(value)        
-        
-        incremental = []
-        incremental.append(cumulative[0])
-        if len(cumulative) > 1 :
-            
-            numerator, denominator = 0, 0
-            for dev in range(1, len(cumulative)):
-                incremental.append(cumulative[dev] - cumulative[dev - 1])
-
-            for dev in range(1, len(incremental) + 1):                                               
-                nsv = self.natural_starting_values(dev)
-                numerator += nsv * incremental[dev - 1]
-                denominator += nsv ** 2
-        else:
-            nsv = self.natural_starting_values(1)
-            numerator = nsv * cumulative[0]
-            denominator = nsv ** 2
-
-        # print(f'Incremental {incremental}')
-
-        return numerator / denominator
-    
-    
-        
