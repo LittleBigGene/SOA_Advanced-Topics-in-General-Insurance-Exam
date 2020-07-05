@@ -1,7 +1,7 @@
 import pandas as pd
 import unittest
-from Measure_ChainLadder_Variability import Chain_Ladder
-from Venter_Factors import Venter_Factors, ChainLadderHelper
+from ChainLadder_Measure_Variability import Chain_Ladder
+from ChainLadder_Assumptions import Chain_Ladder_Venter
 
 class test_ChainLadder(unittest.TestCase):
     def test_19_spring_4(self):
@@ -105,7 +105,7 @@ class test_ChainLadder(unittest.TestCase):
 
         #e
         SSE = 126347521
-        venter = Venter_Factors()
+        venter = Chain_Ladder_Venter()
         self.assertAlmostEqual(561545,    venter.adjusted_SSE(SSE, n, p), 0)
         self.assertAlmostEqual(223735552, venter.adjusted_SSE_AIC(SSE, n, p), 0)
         self.assertAlmostEqual(301539122, venter.adjusted_SSE_BIC(SSE, n, p), 0)
@@ -128,7 +128,7 @@ class test_ChainLadder(unittest.TestCase):
                   15648,17240,25293,27767,26492,27056,27598,
                   17221,23473,34438,37806,36070,36838,37576]
 
-        helper = ChainLadderHelper()
+        helper = Chain_Ladder_Venter()
         paidClaims = helper.convert_2_triangle(rawPaid, 7)
         paidTriangle = Chain_Ladder(paidClaims)
         paidTriangle.calc_AgeToAgeFactors()  
@@ -156,7 +156,7 @@ class test_ChainLadder(unittest.TestCase):
         
         #f 
         SSE = 184086659
-        venter = Venter_Factors()
+        venter = Chain_Ladder_Venter()
         self.assertAlmostEqual(818163,    venter.adjusted_SSE(SSE, n, p), 0)
         self.assertAlmostEqual(325979727, venter.adjusted_SSE_AIC(SSE, n, p), 0)
         self.assertAlmostEqual(439338494, venter.adjusted_SSE_BIC(SSE, n, p), 0)
@@ -169,7 +169,7 @@ class test_ChainLadder(unittest.TestCase):
                     25065, 29536, 38140, 41630, 43510, 44432, 45317,
                     25024, 40688, 52885, 57724, 60332, 61610, 62838,
                     25387, 34597, 44968, 49083, 51300, 52387, 53431]                    
-        helper = ChainLadderHelper()
+        helper = Chain_Ladder_Venter()
         paidClaims = helper.convert_2_triangle(rawPaid, 7)
         paidTriangle = Chain_Ladder(paidClaims)
         paidTriangle.calc_AgeToAgeFactors()  
