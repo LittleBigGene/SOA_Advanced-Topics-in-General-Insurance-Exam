@@ -5,27 +5,6 @@ from sympy import symbols
 from Application_Cat_RiskLoad import Risk_Load
 
 class test_RiskLoad(unittest.TestCase):
-
-    def test_19_spring_1(self):        
-        account = Risk_Load()
-
-        a = 0.0002 * (account.binomial_variance(0.01, 1000) + account.binomial_variance(0.02, 3000) + account.binomial_variance(0.03, 5000))
-        self.assertAlmostEqual(a, 182.76)
-
-        combined_variance = account.binomial_variance(0.01, 1000 + 200) + account.binomial_variance(0.02, 3000 + 500) + account.binomial_variance(0.03, 5000)        
-        b = 0.0002 * combined_variance - a
-        self.assertAlmostEqual(b, 13.61, 2)
-
-        new_account_variance = account.binomial_variance(0.01, 200) + account.binomial_variance(0.02, 500) + account.binomial_variance(0.03, 0)
-        new_account_risk_load = 0.0002 * new_account_variance        
-        self.assertNotEqual(b, new_account_risk_load)
-
-        S1 = (combined_variance) ** 0.5
-        S0 = (a / 0.0002) ** 0.5
-
-        d = account.marginal_surplus(z=symbols('z'), y = 0.15, r = b, SD_L1 = S1, SD_L0 = S0 )
-        self.assertAlmostEqual(2.985, d, 3)
-
     def test_16_fall_6(self):
         account = Risk_Load()
         
@@ -166,6 +145,54 @@ class test_RiskLoad(unittest.TestCase):
         self.assertAlmostEqual(14.09, account.shapley(var_x, covariance, λ) ,2)
         self.assertAlmostEqual(23.36, account.shapley(var_y, covariance, λ), 2)
 
+    def test_18_spring_1(self):
+        p = 0.001
+        L_1 = 1000000
+        L_2 =  500000
+        λ_s = 0.025
+
+        #a) build-up risk load
+        var_1 = p*(1-p)* L_1**2
+        self.assertAlmostEqual(790, var_1**0.5 * λ_s, 0 )
+
+        #b) marginal surplus
+        var = p*(1-p)* (L_1 + L_2)**2
+        self.assertAlmostEqual(395, var**0.5 * λ_s - 790, 0 )
+
+        #c) variance risk load multiplier
+        λ_v = λ_s / var**0.5
+        self.assertAlmostEqual(0.5273, λ_v*10**6, 4)
+
+        #d) marginal variance risk load for each contract
+        self.assertAlmostEqual(527, λ_v * var_1, 0)
+        self.assertAlmostEqual(1185, λ_v * var, 0 )
+        self.assertAlmostEqual(658, λ_v * (var - var_1), 0 )
+
+        #e) renewal risk load for each contract
+        var_2 = p*(1-p)* L_2**2
+        self.assertAlmostEqual(1053+1, λ_v * (var - var_2), 0 )
+        self.assertAlmostEqual( 658  , λ_v * (var - var_1), 0 )
+
+
+    def test_19_spring_1(self):        
+        account = Risk_Load()
+
+        a = 0.0002 * (account.binomial_variance(0.01, 1000) + account.binomial_variance(0.02, 3000) + account.binomial_variance(0.03, 5000))
+        self.assertAlmostEqual(a, 182.76)
+
+        combined_variance = account.binomial_variance(0.01, 1000 + 200) + account.binomial_variance(0.02, 3000 + 500) + account.binomial_variance(0.03, 5000)        
+        b = 0.0002 * combined_variance - a
+        self.assertAlmostEqual(b, 13.61, 2)
+
+        new_account_variance = account.binomial_variance(0.01, 200) + account.binomial_variance(0.02, 500) + account.binomial_variance(0.03, 0)
+        new_account_risk_load = 0.0002 * new_account_variance        
+        self.assertNotEqual(b, new_account_risk_load)
+
+        S1 = (combined_variance) ** 0.5
+        S0 = (a / 0.0002) ** 0.5
+
+        d = account.marginal_surplus(z=symbols('z'), y = 0.15, r = b, SD_L1 = S1, SD_L0 = S0 )
+        self.assertAlmostEqual(2.985, d, 3)
 
 if __name__ == '__main__':
     unittest.main()

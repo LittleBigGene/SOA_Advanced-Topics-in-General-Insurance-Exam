@@ -91,18 +91,22 @@ class Risk_Load:
 
     #10 Sharing the covariance
 
-    def covariance_share(self, loss_x, loss_y, λ = 1):
+    def covariance_share(self, loss_x, loss_y, λ = 1, show=False):
         loss_xy = [x + y for x, y in zip(loss_x, loss_y)]
-
         x, y = sum(self.var_x), sum(self.var_y)
+        if show:
+            print(f'var_x={x} var_y={y}')
 
         for i in range(2):
             weight_x = loss_x[i]/loss_xy[i] 
             weight_y = loss_y[i]/loss_xy[i] 
-            cov = self.var_xy[i] - self.var_x[i] - self.var_y[i]
+            total_cov = self.var_xy[i] - self.var_x[i] - self.var_y[i]
+            
+            x += weight_x * total_cov
+            y += weight_y * total_cov
+            if show:
+                print(f'event {i+1} total cov = {round(total_cov)} \t var_x={x} \t weight_x={round(weight_x,4)} \t var_y={y} \t weight_y={round(weight_y,4)}')
 
-            x += weight_x * cov
-            y += weight_y * cov
             
         return [ x * λ, y * λ ]
 
