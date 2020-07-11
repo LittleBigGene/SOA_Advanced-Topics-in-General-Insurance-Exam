@@ -231,9 +231,10 @@ class test_RatemakingAFinEconApproach(unittest.TestCase):
             beta=1.5,
             market_risk_premium=.06            
         )
-        #a
+        #a) CAPM
         self.assertAlmostEqual(.11, sol) 
 
+        #b) TRR
         upm = symbols('upm')
         sol = targetModel.Target_Total_Rate_of_Return_1(
             P=850000,
@@ -243,9 +244,15 @@ class test_RatemakingAFinEconApproach(unittest.TestCase):
             IR = .07,
             TRR = .11
         )
-        
-        #b
         self.assertAlmostEqual(-.0341, sol, 4) 
+
+        #c) Explain how the existence of catastrophe risk makes the use of CAPM problematic for insurers.
+        # CAPM provides a risk premium only for risks that are systematic with market returns. 
+        # Catastrophe risk is not such a risk and hence is not considered by CAPM.
+
+        #d) Explain the relationship between the IRR and NPV when employing discounted cash flow analysis.
+        # The IRR is the discount rate such that NPV is zero. 
+        # If cash flows change sign more than once, there may be multiple solutions.
 
 if __name__ == '__main__':
     unittest.main()
