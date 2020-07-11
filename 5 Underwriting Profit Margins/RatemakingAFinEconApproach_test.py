@@ -4,32 +4,6 @@ from sympy import symbols
 from RatemakingAFinEconApproach import Ratemaking_A_FinEcon_Approach as FinEconRatemaking
 
 class test_RatemakingAFinEconApproach(unittest.TestCase):
-    def test_19_spring_7(self):
-        targetModel = FinEconRatemaking()
-
-        exp_r = symbols('r')
-        sol = targetModel.CAPM_Total_Return(
-            exp_return = exp_r,
-            risk_free=.02,
-            beta=1.5,
-            market_risk_premium=.06            
-        )
-        #a
-        self.assertAlmostEqual(.11, sol) 
-
-        upm = symbols('upm')
-        sol = targetModel.Target_Total_Rate_of_Return_1(
-            P=850000,
-            S=500000,
-            UPM = upm,
-            IA = 1200000,
-            IR = .07,
-            TRR = .11
-        )
-        
-        #b
-        self.assertAlmostEqual(-.0341, sol, 4) 
-
     def test_16_fall_7(self):
         targetModel = FinEconRatemaking()
         
@@ -43,7 +17,7 @@ class test_RatemakingAFinEconApproach(unittest.TestCase):
 
         # c
         upm = symbols('upm')
-        sol = targetModel.CAPM_UPM(
+        sol = targetModel.Fairley_CAPM(
             UPM=upm,
             k = k,
             risk_free=.01,
@@ -152,7 +126,7 @@ class test_RatemakingAFinEconApproach(unittest.TestCase):
         targetModel = FinEconRatemaking()     
 
         upm = symbols('upm')
-        sol = targetModel.CAPM_UPM(
+        sol = targetModel.Fairley_CAPM(
             UPM=upm,
             k = 0.75,
             risk_free=0.02,
@@ -186,6 +160,92 @@ class test_RatemakingAFinEconApproach(unittest.TestCase):
         #   • It considers only one policy term, not renewal cycles.
         #   • Actual taxes may not be at the corporate rate.
         #   • Expenses may depend on the premium rate.
+
+    def test_18_spring_4(self):
+        #a) Explain why owners’ equity is difficult to determine.
+        # • Insurers do not set rates in aggregate, but on a by-line and by-state basis. 
+        #   However, equity is normally only calculated in aggregate.
+
+        # • Statutory surplus is generally lower than actual equity due to 
+        #       ignoring time value of money, 
+        #       excluding some assets, and 
+        #       valuing some assets at other than market value.
+
+        targetModel = FinEconRatemaking()
+        #b       
+        upm = symbols('upm')
+        step1 = targetModel.Fairley_CAPM(
+            UPM=upm,
+            k = 1,
+            risk_free=.02,
+            uw_beta = 1.5,
+            market_risk_premium=.04
+        )
+        self.assertAlmostEqual(0.04, step1)
+
+        p = symbols('p')
+        step2 = targetModel.Target_Total_Rate_of_Return_1(
+            P=p,
+            S=100,
+            UPM = step1,
+            IA = p-25+100,
+            IR = .02,
+            TRR = .07
+        )
+
+        self.assertAlmostEqual(91.66666666, step2)
+
+        #c 40% quota share
+        # before reinsurance
+        upm = 0.04
+        p = 91.666
+        e = 25
+        L = (1 - upm) * p - e
+        
+        # after reinsurance        
+        E = e - .35 * .4 * p
+        P = 0.6*p      
+        L = 0.6*L  
+        upm = 1 - L/P - E/P
+
+        self.assertAlmostEqual(0.0915, upm, 4)        
+
+        trr = symbols('trr')        
+        sol = targetModel.Target_Total_Rate_of_Return( 
+            P = P,
+            S = .6 * 100,
+            E = E,
+            L = L,
+            IR = .02,
+            TRR = trr
+        )        
+        self.assertAlmostEqual(0.118, sol, 3)
+        
+    def test_19_spring_7(self):
+        targetModel = FinEconRatemaking()
+
+        exp_r = symbols('r')
+        sol = targetModel.CAPM_Total_Return(
+            exp_return = exp_r,
+            risk_free=.02,
+            beta=1.5,
+            market_risk_premium=.06            
+        )
+        #a
+        self.assertAlmostEqual(.11, sol) 
+
+        upm = symbols('upm')
+        sol = targetModel.Target_Total_Rate_of_Return_1(
+            P=850000,
+            S=500000,
+            UPM = upm,
+            IA = 1200000,
+            IR = .07,
+            TRR = .11
+        )
+        
+        #b
+        self.assertAlmostEqual(-.0341, sol, 4) 
 
 if __name__ == '__main__':
     unittest.main()

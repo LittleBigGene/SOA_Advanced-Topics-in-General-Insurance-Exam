@@ -53,7 +53,7 @@ class Ratemaking_A_FinEcon_Approach:
 
     # 4 Application of the CAPM to Insurance
     # k, the funds generating coefficient estimate
-    def CAPM_UPM(self, UPM, k, risk_free, uw_beta, market_risk_premium, tax = [0,0], equity_to_premium = 1):
+    def Fairley_CAPM(self, UPM, k, risk_free, uw_beta, market_risk_premium, tax = [0,0], equity_to_premium = 1):
         sol = solve(
             - k                 * risk_free *(1-tax[0])/(1-tax[1]) 
             + equity_to_premium * risk_free *   tax[0] /(1-tax[1]) 
