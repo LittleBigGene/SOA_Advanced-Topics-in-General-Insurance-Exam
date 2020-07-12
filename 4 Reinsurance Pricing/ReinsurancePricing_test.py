@@ -149,7 +149,8 @@ class test_ReinsurancePricing(unittest.TestCase):
         total_expeced_loss = .6 * (460 + 230) 
         #print(total_expeced_loss)
 
-        #c) clash over
+        #c) clash cover
+        
         #d) Describe two ways that a loss on this treaty could occur. 
         #   Any two of the following were sufficient for full credit.
         #   • Multiple policies involved in a single occurrence

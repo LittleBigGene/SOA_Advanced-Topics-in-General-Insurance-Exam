@@ -99,24 +99,28 @@ class Reinsurance_Pricing:
 
     # b) Exposure Rating
     def occurrence_exposure_rating(self, underlyingLimit, policyLimit, ϕ = 0 , show = False):
-        ul         = self.ILF[underlyingLimit]
-        ul_pl      = self.ILF[underlyingLimit + policyLimit]        
-        ul_ap      = self.ILF[underlyingLimit + self.AP ]
-        ul_ap_lim  = self.ILF[underlyingLimit + self.AP + self.Limit  ]
+        
+        up  = self.ILF[underlyingLimit + policyLimit]                
+        ual = self.ILF[underlyingLimit + self.AP + self.Limit  ]
+        uax = self.ILF[underlyingLimit + self.AP]
+        #ua+ & ua-  = self.ILF[underlyingLimit +- self.AP] 
 
-        reinsurance = (min(ul_pl,ul_ap_lim) - min(ul_pl,ul_ap)) * (1-ϕ)
-        underlying  = (ul_pl - ul) * (1-ϕ)
-
+        ul = self.ILF[underlyingLimit]
         pl = self.ILF[policyLimit]     
-        UL_less_Excess = 0
+
+        reinsurance = (1-ϕ) * (min(up, ual) - min(up, uax))
+        underlying  = (1-ϕ) * (up - ul)
+                
         if ϕ > 0 :
-            UL_less_Excess = self.ILF[underlyingLimit - self.AP]
-            reinsurance += (ul - UL_less_Excess) * ϕ
-            underlying  += (pl - 0             ) * ϕ
+            ua_ = self.ILF[underlyingLimit - self.AP] 
+            reinsurance += ϕ*(ul - ua_)
+            underlying  += ϕ* pl
 
         if show:
-            print(f'({min(ul_pl,ul_ap_lim)}-{min(ul_pl,ul_ap)})({1-ϕ}) + ({ul} - {UL_less_Excess})({ϕ})')
-            print(f'over ({ul_pl}-{ul})({1-ϕ}) + ({pl} - {0})({ϕ})')
+            print(f'ul = {ul}, up = {up}, ual = {ual}, ua+ ={uax}, ua- = {ua_}')
+            print(f'({min(up,ual)}-{min(up, uax)})({1-ϕ}) + ({ul} - {ua_})({ϕ})')
+            print(f'over ({up}-{ul})({1-ϕ}) + ({pl} - {0})({ϕ})')
+
         return  reinsurance / underlying
     
 
