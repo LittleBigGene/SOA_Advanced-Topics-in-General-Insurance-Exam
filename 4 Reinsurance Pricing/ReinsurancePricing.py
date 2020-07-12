@@ -57,9 +57,16 @@ class Reinsurance_Pricing:
     # 2. Property Per Risk Excess Treaties
     # a) Experience Rating
     # b) Exposure Rating
-    def risk_exposure_rating(self, limit, retention, insured_value):
-            # layer 400 excess of 100 -> limit, retention = 400, 100             
-        return self.exposure_curve( (limit + retention) / insured_value ) - self.exposure_curve( retention / insured_value )
+    def risk_exposure_rating(self, limit, retention, insured_value, show=False):
+        # layer 400 excess of 100 -> limit, retention = 400, 100  
+
+        ef_ceili = self.exposure_curve( (limit + retention) / insured_value )
+        ef_floor = self.exposure_curve( (retention) / insured_value )
+        
+        if show:
+            print(f'{ef_ceili - ef_floor}')
+                
+        return ef_ceili - ef_floor
         
     def exposure_curve(self, x):
         x = np.clip(x, 0, 1.2)

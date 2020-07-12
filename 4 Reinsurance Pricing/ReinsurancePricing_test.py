@@ -75,7 +75,9 @@ class test_ReinsurancePricing(unittest.TestCase):
         
         expo = 0
         for iv in insured_values:
-            expo += betaRe.risk_exposure_rating(limit = 400, retention = 100, insured_value = iv)
+            layer = betaRe.risk_exposure_rating(limit = 400, retention = 100, insured_value = iv, show=True)
+            expo += layer
+
 
         # a
         self.assertAlmostEqual(1020833, expo * 0.6 * 1000000, 0)
