@@ -178,6 +178,15 @@ class test_ReinsurancePricing(unittest.TestCase):
 
         self.assertAlmostEqual(1.581, cv, 3)
 
+    def test_cas8_2013_25(self):
+        # Recursive Formula - frequency and severity can be analyzed separately. 
+        #   being simple to work with and
+        #   works well for low frequency scenarios
+                
+        #   But only a single severity distribution can be used.
+        #   and require an evenly spaced severity distribution. 
+        pass
+
     def test_17_spring_1(self):
         cat = Reinsurance_Pricing()
 
