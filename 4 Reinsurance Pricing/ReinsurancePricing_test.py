@@ -68,24 +68,28 @@ class test_ReinsurancePricing(unittest.TestCase):
         # This results in a loss ratio distribution with a larger variance than a quota share treaty.
 
     def test_16_spring_1(self):
-        # surplus share with retained line of 500
-        insured_values = np.clip(np.array([100,200,500,1000]), 0, 500)
+        surplus_share_retained_line = 500
+        insured_values = np.clip(np.array([100,200,500,1000]), 0, surplus_share_retained_line)
 
         betaRe = Reinsurance_Pricing()
         
         expo = 0
         for iv in insured_values:
-            layer = betaRe.risk_exposure_rating(limit = 400, retention = 100, insured_value = iv, show=True)
+            layer = betaRe.risk_exposure_rating(limit = 400, retention = 100, insured_value = iv)
             expo += layer
-
-
         # a
         self.assertAlmostEqual(1020833, expo * 0.6 * 1000000, 0)
 
         # b) explain free cover
+        # no trended losses in the top of the layer
 
-        # c) The surplus share reinsurance       will inure to the benefit of the property catastrophe cover.
-        # d) The property per risk excess treaty will inure to the benefit of the property catastrophe cover.
+        # c) State whether the property catastrophe cover will typically inure to the benefit of the surplus share reinsurance.
+        # The answer is no. The reverse is typically true. 
+        # The surplus share reinsurance will inure to the benefit of the property catastrophe cover.
+
+        # d) state whether the property catastrophe cover will typically inure to the benefit of the property per risk excess treaty.
+        # The answer is no. The reverse is typically true. 
+        # The property per risk excess treaty will inure to the benefit of the property catastrophe cover.
 
     def test_16_spring_8(self):
         #a
