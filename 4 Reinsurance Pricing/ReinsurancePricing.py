@@ -123,11 +123,7 @@ class Reinsurance_Pricing:
         if (retroPremium < minPremium):
             return minPremium        
         return retroPremium
-
-    def loss_cost_rate(self, standard_premium_x, standard_premium_y, expected_loss_ratio_x, expected_loss_ratio_y, allocation_x, allocation_y, layer_x, layer_y):
-
-        return (standard_premium_x * expected_loss_ratio_x + standard_premium_y * expected_loss_ratio_y) * (allocation_x * layer_x + allocation_y * layer_y ) 
-
+   
 
     # c) Workers Compensation Experience Rating
 
