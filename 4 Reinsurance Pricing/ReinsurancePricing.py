@@ -103,7 +103,7 @@ class Reinsurance_Pricing:
         up  = self.ILF[underlyingLimit + policyLimit]                
         ual = self.ILF[underlyingLimit + self.AP + self.Limit  ]
         uax = self.ILF[underlyingLimit + self.AP]
-        #ua+ & ua-  = self.ILF[underlyingLimit +- self.AP] 
+        ua_ = 0 # self.ILF[underlyingLimit - self.AP] 
 
         ul = self.ILF[underlyingLimit]
         pl = self.ILF[policyLimit]     
@@ -174,10 +174,8 @@ class Reinsurance_Pricing:
     # That is, other reinsurance inures to the benefit of the catastrophe cover.
     
 
-
     # 5B. Alternative Risk Products
-    def additional_prem(self, percentage, loss, margin, annualPrem ):
-        return max(0, percentage * (loss + margin - annualPrem))
+    
 
     # 6. Calculating the Final Price
 

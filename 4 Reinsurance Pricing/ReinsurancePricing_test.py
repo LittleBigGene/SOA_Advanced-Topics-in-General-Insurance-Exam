@@ -342,33 +342,30 @@ class test_ReinsurancePricing(unittest.TestCase):
         self.assertAlmostEqual( loadedLossCost, .2469, 4)
     
     def test_19_spring_8(self):
-        annualPrem = 50
-        margin = .1 * annualPrem
-        OccurrenceLimit = 200         
+        P = 50     # Annual Prem
+        M = .1 * P # Margin        
         
-        specialist = Reinsurance_Pricing()
+        #a_i no losses, additional premium is zero
+        L, AP = 0, 0         
+        C = 0.95*(P - M)
+        netPL_i = P - L - C + AP
+        self.assertAlmostEqual(7.25, netPL_i)
 
-        #a_i no losses
-        loss = 0
-        additionalPrem = specialist.additional_prem(0.6, loss, margin, annualPrem)
-        profitCommission = specialist.profit_commission(0.95, loss, margin, annualPrem)
-        a1Profit = annualPrem - loss - profitCommission + additionalPrem
-        self.assertAlmostEqual(7.25, a1Profit)
+        #a_ii one or more loss, commission is zero
+        L, C = 200, 0
+        AP = .6 * (L + M - P)                
+        netPL_ii = P - L - C + AP        
+        self.assertAlmostEqual(-57, netPL_ii)
 
-        #a_ii one or more loss
-        loss = OccurrenceLimit
-        additionalPrem = specialist.additional_prem(0.6, loss, margin, annualPrem)
-        profitCommission = specialist.profit_commission(0.95, loss, margin, annualPrem)
-        a2Loss = annualPrem - loss - profitCommission + additionalPrem
-        self.assertAlmostEqual(-57, a2Loss)
-
-        #b the rate on line for an equivalent traditional risk cover        
-        self.assertAlmostEqual(11.3/100, a1Profit/(a1Profit-a2Loss), 3 )
+        #b the rate on line for an equivalent traditional risk cover
+        rateOnLine = netPL_i/(netPL_i-netPL_ii)        
+        self.assertAlmostEqual(.113, rateOnLine, 3 )
 
         #c 
-        additionalPrem = 108.917
-        a2Loss = annualPrem - loss - profitCommission + additionalPrem
-        self.assertAlmostEqual(.15, a1Profit/(a1Profit-a2Loss), 3 )
+        AP = 108.917
+        netPL_ii = P - L - C + AP 
+        rateOnLine = netPL_i/(netPL_i-netPL_ii) 
+        self.assertAlmostEqual(.15, rateOnLine, 3 )
 
     def test_cas8_2019_17(self):
         pass
