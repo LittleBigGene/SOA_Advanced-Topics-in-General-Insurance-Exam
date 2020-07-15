@@ -305,9 +305,21 @@ class test_ReinsurancePricing(unittest.TestCase):
 
         xsCession = (surplusRetainedLoss - 1000).clip(0,4000)        
         xsRetained = surplusRetainedLoss - xsCession        
-
+            
         assert surplusCededLoss.sum() == 21000
         assert xsCession.sum() == 5500
+        assert xsRetained.sum() - 6000 == 800
+
+        #b
+        assert 600 * 1.25 * 800 / 8000 == 75
+
+        #c) Discuss whether a reinstatement pro-rata as to time would be appropriate for this type of cover.
+
+        # Reinstatement pro-rata as to time is uncommon and usually inappropriate for windstorm coverage, which is seasonal. 
+        # That is, exposure to risk is not uniform over the coverage period.
+
+        #d) Explain with an example why a catastrophe cover is usually written on 
+        #   a losses occurring basis rather than on a risks attaching basis.
 
     def test_19_spring_2(self):        
         ExpectedLoss = Reinsurance_Pricing()
