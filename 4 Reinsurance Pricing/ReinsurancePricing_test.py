@@ -166,8 +166,8 @@ class test_ReinsurancePricing(unittest.TestCase):
         aggregate_losses_prob = [.5,.1,.095,.084,.0661,.0403,.0311,.0231,.0166,.0119]
 
         #a
-        p = cat.aggregate_loss_probability(loss_size_probability, aggregate_losses_prob, 4)
-        self.assertAlmostEqual(.008765, p/10, 4) # SOA Solution 0.0087
+        p = cat.aggregate_loss_probability(a=0.5, b= 0, k=10, S=loss_size_probability, A= aggregate_losses_prob)
+        self.assertAlmostEqual(.0087, p, 4)
 
         #b
         m = cat.moment_of_loss(loss_size_probability)
@@ -225,8 +225,8 @@ class test_ReinsurancePricing(unittest.TestCase):
         loss_size_probability = [0, .4, .3, .2, .1]
         aggregate_losses_prob = [0.1353, 0.1083, 0.1245, 0.1306, 0.1230, 0.0982, 0.0804, 0.0621, 0.0453, 0.0318]
         
-         #a
-        p = cat.aggregate_loss_probability(loss_size_probability, aggregate_losses_prob, 10)
+        #a
+        p = cat.aggregate_loss_probability(a=0, b= 2, k=10, S=loss_size_probability, A= aggregate_losses_prob)
         self.assertAlmostEqual(.0219, p, 4)
 
         #b
@@ -248,13 +248,14 @@ class test_ReinsurancePricing(unittest.TestCase):
                                  0.171875, 
                                  0.062500, 0.046875, 0.031250, 
                                  0.015625] # 4,8 unknown
-        
-        #a
-        p = cat.aggregate_loss_probability(loss_size_probability, aggregate_losses_prob, 4)
-        self.assertAlmostEqual(.171875, p + 0.05859375)
+        M, p = 2, 0.5
 
-        p = cat.aggregate_loss_probability(loss_size_probability, aggregate_losses_prob, 8)
-        self.assertAlmostEqual(.015625, p/2 )
+        #a
+        p4 = cat.aggregate_loss_probability(a=p/(p-1), b= (M+1)*p/(1-p), k=4, S=loss_size_probability, A=aggregate_losses_prob)
+        self.assertAlmostEqual(.171875, p4)
+
+        p8 = cat.aggregate_loss_probability(a=p/(p-1), b= (M+1)*p/(1-p), k=8, S=loss_size_probability, A=aggregate_losses_prob)
+        self.assertAlmostEqual(.015625, p8 )
 
     def test_18_fall_1(self):        
         tolerant = Reinsurance_Pricing()

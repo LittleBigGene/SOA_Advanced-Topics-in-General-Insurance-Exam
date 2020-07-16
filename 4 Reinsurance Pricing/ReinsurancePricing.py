@@ -10,8 +10,6 @@ class Reinsurance_Pricing:
     def __init__(self) -> None:
         #IncreasedLimitsFactor
         self.ILF = {}
-        self.mean = 0
-        self.variance = 0
         self.AP = 0
         self.Limit = 0
     # 1. Proportional Treaties
@@ -142,15 +140,14 @@ class Reinsurance_Pricing:
     # a) Empirical Distribution
     # b) Single Distribution Model
     # c) Recursive Calculation of Aggregate Distribution
-    def aggregate_loss_probability(self, S, A, k, show=False):
-
-        a = 0        
+    def aggregate_loss_probability(self, a, b, k, S, A, show=False):
+        result = 0       
         for i in range(1, min(len(S), k+1)):                        
-            a += self.mean / k * i * A[k-i] * S[i]
+            result += (a + b * i / k ) * A[k-i] * S[i]
             if show:
-                print(f'i {i} k {k}; {self.mean} / {k} * {i} * {A[k-i]} * {S[i]}')
+                print(f'(a={a} b={b} i={i} k={k}; S={S[i]} * A={A[k-i]}')
             
-        return a 
+        return result 
 
         # Text Book Example
         # treaty = Reinsurance_Pricing()
