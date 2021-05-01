@@ -68,7 +68,8 @@ class test_ChainLadder(unittest.TestCase):
     
         # c) why normal approximation may not be reasonable ?
         # The normal approximation is symmetric and may allow for more negative movement than is reasonable. 
-        # In this case, it can be noted either that the standard deviation is close to half the reserve or that there is a significant probability of negative development.
+        # In this case, it can be noted either that the standard deviation is close to half the reserve 
+        # or that there is a significant probability of negative development.
         
         # d) Recommend and justify an approach that may be superior 
         # A lognormal distribution may be a superior model. 
@@ -191,9 +192,12 @@ class test_ChainLadder(unittest.TestCase):
         self.assertAlmostEqual(3157, paidTriangle.standard_error(5),0)
 
         #c d e f) Indicate whether or not this observation provides support for the underlying assumptions of Mack’s model. Justify your response.
-        #c) No, Mack assumes that expected development is a multiple of the previous value. It does not assume that the factor is greater than one.
-        #d) No, Mack makes no assumption about the observed ratios, only about their expected values and variances.
-        #e) The results cannot confirm that the assumptions hold because there may be other tests that would reveal ways in which the assumptions do not hold.
+        #c) No, Mack assumes that expected development is a multiple of the previous value. 
+        #       It does not assume that the factor is greater than one.
+        #d) No, Mack makes no assumption about the observed ratios, 
+        #       only about their expected values and variances.
+        #e) The results cannot confirm that the assumptions hold because 
+        #       there may be other tests that would reveal ways in which the assumptions do not hold.
         #f) The results cannot confirm that the assumptions do not hold. 
         #   When conducting multiple tests in an environment where the assumptions do hold, 
         #   it is possible that due to chance a few of the tests may yield an adverse result.
